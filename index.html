@@ -5,7 +5,8 @@
     <title>Ternary Town</title>
     <script src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
     <script type="text/javascript" src='assets/js/bundle.js'></script>
-    <link rel="stylesheet" href="assets/css/style.scss">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
   </head>
   <body>
     <header><h1>Ternary Town</h1></header>
@@ -14,28 +15,40 @@
         <canvas id="game-canvas" width="300" height="300">
         </canvas>
         <div class='sidebar'>
-          <div class='scoreboard'>
-            <p>Score: 999,999
+          <div class='score-board'>
+            <p>
+              <span class='score-text'>Score:</span>
+              <span id='score'>0</span>
+            </p>
           </div>
-          <div class='next-piece'>
-            <h3>Next Piece:</h3>
+          <div class='level-board'>
+            <p>
+              <span class='level-text'>Level:</span>
+              <span id='level'>0</span>
+            </p>
+          </div>
+          <div class='current-piece-board'>
+            <h3>Current Piece</h3>
+            <div id='current-piece'>
+            </div>
           </div>
           <div class='combinations'>
+            <h3>Combinations</h3>
             <ul>
-              <li>Item 1</li>
-              <li>Item 2</li>
-              <li>Item 3</li>
-              <li>Item 4</li>
+              <li>Item 1 - lorem ipsum</li>
+              <li>Item 2 - lorem ipsum</li>
+              <li>Item 3 - lorem ipsum</li>
+              <li>Item 4 - lorem ipsum</li>
             </ul>
           </div>
         </section>
-        <section class='rules-section'>
-          <h2>Rules</h2>
+        <section class='rules'>
+          <!-- <h2>Rules</h2> -->
           <ul>
-            <li>Item 1</li>
-            <li>Item 2</li>
-            <li>Item 3</li>
-            <li>Item 4</li>
+            <li>Rule 1 - lorem ipsum dolor </li>
+            <li>Rule 2 - lorem ipsum dolor </li>
+            <li>Rule 3 - lorem ipsum dolor </li>
+            <li>Rule 4 - lorem ipsum dolor </li>
           </ul>
         </section>
       </div>

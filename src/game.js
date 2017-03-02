@@ -1,4 +1,4 @@
-import Square from './square';
+import { Square, getImage } from './square';
 
 const DELTAS = [
   [0, -1],
@@ -7,13 +7,16 @@ const DELTAS = [
   [-1, 0]
 ];
 
-const SQ_VALUES = [1, 1, 1, 1, 2, 2, 3]
-
 class TernaryTown {
   constructor(start = 6) {
     this.canvas = new createjs.Stage('game-canvas');
     this.grid = [];
-    this.currentPiece = 1;
+    this.scoreboard = document.getElementById('score');
+    this.levelBoard = document.getElementById('level');
+    this.pieceBoard = document.getElementById('current-piece');
+    this.score = 0;
+    this.level = 0;
+    this.nextPiece();
     this.createBoard(start);
     this.startGameListeners();
   }
@@ -29,14 +32,15 @@ class TernaryTown {
     }
     this.setStartingPieces(start);
     this.drawSquares();
+    this.updateScore(0);
   };
 
   setStartingPieces(start) {
-    const startVals = SQ_VALUES.slice(0, start + 1);
-    for (var i = 0; i < startVals.length; i++) {
+    for (var i = 0; i < start; i++) {
       const x = Math.floor(Math.random() * 6);
       const y = Math.floor(Math.random() * 6);
-      this.grid[y][x].val = startVals[i];
+      const val = (Math.floor(Math.random() * i)) + 1;
+      this.grid[y][x].val = val;
     }
   }
 
@@ -47,7 +51,7 @@ class TernaryTown {
       const sqX = Math.floor(evt.stageX / 50);
       const sqY = Math.floor(evt.stageY / 50);
       const hoverSq = self.grid[sqY][sqX];
-      hoverSq.hoverColor(self.currentPiece);
+      hoverSq.hoverPiece(self.currentPiece);
       self.canvas.update();
     });
 
@@ -71,7 +75,16 @@ class TernaryTown {
     const clickedSq = this.grid[sqY][sqX];
     if (this.validMove(clickedSq)) {
       clickedSq.val = this.currentPiece;
-      this.findMatch(sqX, sqY);
+      let matches = this.findMatches(sqX, sqY);
+      if (matches.length >= 2) {
+        while (matches.length >= 2) {
+          this.renderMatch(clickedSq, matches);
+          this.updateScore((clickedSq.val - 1) * 100 * (matches.length + 1));
+          matches = this.findMatches(sqX, sqY);
+        }
+      } else {
+        this.updateScore(clickedSq.val * 10);
+      }
       this.checkOver();
       this.nextPiece();
     }
@@ -85,9 +98,9 @@ class TernaryTown {
     return true;
   }
 
-  findMatch(sqX, sqY) {
+  findMatches(sqX, sqY) {
     const clicked = this.grid[sqY][sqX];
-    const matchVal = this.currentPiece;
+    const matchVal = clicked.val;
 
     const matches = [];
     DELTAS.forEach((d) => {
@@ -115,14 +128,22 @@ class TernaryTown {
         }
       });
     });
+    return matches;
+  }
 
-    if (matches.length >= 2) {
-      this.renderMatch(clicked, matches);
-    }
+  updateScore(num) {
+    this.score += num;
+    this.level = Math.floor(this.score / 10000);
+    this.scoreboard.innerHTML = this.score;
+    this.levelBoard.innerHTML = this.level;
   }
 
   renderMatch(clickedSq, matches) {
-    clickedSq.val += 1;
+    if (clickedSq.val < 9) {
+      clickedSq.val += 1;
+    } else {
+      clickedSq.val = '';
+    }
     matches.forEach((match) => {
       match.val = '';
     });
@@ -130,7 +151,11 @@ class TernaryTown {
   }
 
   nextPiece() {
-    this.currentPiece = SQ_VALUES[Math.floor(Math.random() * SQ_VALUES.length)];
+    const i = this.level + 1;
+    const randomVal = Math.ceil(Math.random() * i * Math.random())
+    this.currentPiece = randomVal;
+    const imageSrc = getImage(this.currentPiece);
+    this.pieceBoard.innerHTML = `<img src=\"${imageSrc}\">`
   }
 
   checkOver() {
