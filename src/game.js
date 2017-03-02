@@ -14,6 +14,7 @@ class TernaryTown {
     this.scoreboard = document.getElementById('score');
     this.levelBoard = document.getElementById('level');
     this.pieceBoard = document.getElementById('current-piece');
+    this.addedScore = document.getElementById('added-score');
     this.score = 0;
     this.level = 0;
     this.nextPiece();
@@ -32,7 +33,6 @@ class TernaryTown {
     }
     this.setStartingPieces(start);
     this.drawSquares();
-    this.updateScore(0);
   };
 
   setStartingPieces(start) {
@@ -134,7 +134,11 @@ class TernaryTown {
   updateScore(num) {
     this.score += num;
     this.level = Math.floor(this.score / 10000);
-    this.scoreboard.innerHTML = this.score;
+    window.setTimeout(() => {
+      this.addedScore.innerHTML = `&nbsp;`;
+      this.scoreboard.innerHTML = this.score;
+    }, 1100);
+    this.addedScore.innerHTML = `+ ${num}!`;
     this.levelBoard.innerHTML = this.level;
   }
 

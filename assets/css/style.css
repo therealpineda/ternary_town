@@ -52,9 +52,6 @@ header h1 {
   border: 1px solid black;
   padding: 5px;
   margin-right: 10px;
-  /*-webkit-box-shadow: inset -21px -24px 46px 2px rgba(0,0,0,0.21);
-  -moz-box-shadow: inset -21px -24px 46px 2px rgba(0,0,0,0.21);
-  box-shadow: inset -21px -24px 46px 2px rgba(0,0,0,0.21);*/
 }
 
 .sidebar {
@@ -63,25 +60,48 @@ header h1 {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  font-size: 16px;
 }
 
 .sidebar h3 {
-  font-size: 14px;
+  font-size: 18px;
   margin-bottom: 5px;
 }
 
-.score-board {
-  border-bottom: 1px solid black;
-  padding-bottom: 4px;
-}
-
-.score {
-  font-weight: 700;
-}
-
 .level-board {
-  margin-bottom: 20px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid black;
 
+}
+
+.level-board p {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#level {
+  font-size: 26px;
+}
+
+.score-board {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.level-text {
+  letter-spacing: .6px;
+}
+
+#score {
+  font-weight: 700;
+  margin-right: 5px;
+}
+
+#added-score {
+  margin-top: 5px;
+  color: darkgreen;
+  text-align: center;
 }
 
 .current-piece-board {
