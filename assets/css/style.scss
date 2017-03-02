@@ -1,0 +1,27 @@
+/* RESET */
+html, body, header, h1, h2, h3, main, div, table, tr, td, p, ul, li, section {
+  margin: 0px;
+  border: 0px;
+  padding: 0px;
+
+  box-sizing: border-box;
+
+  font: inherit;
+
+  list-style: none;
+  text-decoration: none;
+}
+
+#game-canvas {
+  // border: 1px solid red;
+}
+
+main {
+  border: 1px solid black;
+  width: 500px;
+  margin: 20px auto;
+}
+
+.game {
+  display: flex;
+}

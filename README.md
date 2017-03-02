@@ -16,11 +16,11 @@ Ternary Town is a single-player casual match-three game inspired by Triple Town.
 - [ ] about section or modal that displays combinations and points
 - [ ] production README
 
-### Wireframes
+### Wireframe
 
 Ternary Town will be played on a single page that will hold the 6x6 grid as well as the about section, and links to the project's Github.
 
-![alt text](	https://s3.us-east-2.amazonaws.com/ternary--town/images/wireframe.png "Wireframe - Ternary Town")
+![alt text](docs/wireframe.png "Wireframe - Ternary Town")
 
 ### Architecture and Technologies
 

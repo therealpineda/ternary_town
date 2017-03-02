@@ -1,0 +1,34 @@
+{
+  "name": "ternary_town",
+  "version": "1.0.0",
+  "description": "Single-player casual match-three game inspired by Triple Town",
+  "main": "webpack.config.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack": "webpack",
+    "postinstall": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/therealpineda/ternary_town.git"
+  },
+  "keywords": [
+    "JavaScript"
+  ],
+  "author": "Christopher Pineda",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/therealpineda/ternary_town/issues"
+  },
+  "homepage": "https://github.com/therealpineda/ternary_town#readme",
+  "dependencies": {
+    "babel": "^6.23.0",
+    "babel-core": "^6.23.1",
+    "babel-loader": "^6.3.2",
+    "babel-preset-es2015": "^6.22.0",
+    "webpack": "^2.2.1"
+  }
+}
