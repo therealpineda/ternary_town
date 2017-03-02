@@ -6,45 +6,29 @@ class Square {
     this.y = y;
     this.val = '';
     canvas.addChild(this.square);
-    this.addListeners();
-  }
-
-  addListeners() {
-    this.square.addEventListener('click', this.clickedSquare.bind(this));
-  }
-
-  clickedSquare(evt) {
-    if (this.validMove()) {
-      this.val = "1";
-      this.drawSquare();
-    }
-  }
-
-  validMove() {
-    return this.val ? false : true;
   }
 
   drawSquare() {
-    let color;
-    switch (this.val) {
-      case '1':
-        color = '#FF0000';
-        break;
-      case '2':
-        color = '#00FF00';
-        break;
-      case '3':
-        color = '#0000FF';
-        break;
-      default:
-        color = '#FFF';
-        break;
-    }
+    const color = this.getColor(this.val);
     this.square.graphics.clear().beginStroke('#000').beginFill(color).drawRect(this.x,this.y,50,50);
   }
 
-  changeColor() {
-    this.square.graphics.beginFill('#000').drawRect(this.x,this.y,50,50);
+  getColor(pieceVal) {
+    switch (pieceVal) {
+      case 1:
+        return '#FF0000';
+      case 2:
+        return '#00FF00';
+      case 3:
+        return '#0000FF';
+      default:
+        return '#FFF';
+    }
+  }
+
+  hoverColor(currentPiece) {
+    const color = this.getColor(currentPiece);
+    this.square.graphics.beginFill(color).drawRect(this.x,this.y,50,50);
   }
 
 }
