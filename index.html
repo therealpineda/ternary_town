@@ -9,11 +9,62 @@
     <link rel="stylesheet" href="assets/css/style.css">
   </head>
   <body>
+
     <header><h1>Ternary Town</h1></header>
     <main class='main-app'>
       <section class='game'>
-        <canvas id="game-canvas" width="300" height="300">
-        </canvas>
+        <div class='game-board-container'>
+          <table id='game-board'>
+          <tr id='game-row-0'>
+            <td id="0-0" class="square"></td>
+            <td id="0-1" class="square"></td>
+            <td id="0-2" class="square"></td>
+            <td id="0-3" class="square"></td>
+            <td id="0-4" class="square"></td>
+            <td id="0-5" class="square"></td>
+          </tr>
+          <tr id='game-row-1'>
+            <td id="1-0" class="square"></td>
+            <td id="1-1" class="square"></td>
+            <td id="1-2" class="square"></td>
+            <td id="1-3" class="square"></td>
+            <td id="1-4" class="square"></td>
+            <td id="1-5" class="square"></td>
+          </tr>
+          <tr id='game-row-2'>
+            <td id="2-0" class="square"></td>
+            <td id="2-1" class="square"></td>
+            <td id="2-2" class="square"></td>
+            <td id="2-3" class="square"></td>
+            <td id="2-4" class="square"></td>
+            <td id="2-5" class="square"></td>
+          </tr>
+          <tr id='game-row-3'>
+            <td id="3-0" class="square"></td>
+            <td id="3-1" class="square"></td>
+            <td id="3-2" class="square"></td>
+            <td id="3-3" class="square"></td>
+            <td id="3-4" class="square"></td>
+            <td id="3-5" class="square"></td>
+          </tr>
+          <tr id='game-row-4'>
+            <td id="4-0" class="square"></td>
+            <td id="4-1" class="square"></td>
+            <td id="4-2" class="square"></td>
+            <td id="4-3" class="square"></td>
+            <td id="4-4" class="square"></td>
+            <td id="4-5" class="square"></td>
+          </tr>
+          <tr id='game-row-5'>
+            <td id="5-0" class="square"></td>
+            <td id="5-1" class="square"></td>
+            <td id="5-2" class="square"></td>
+            <td id="5-3" class="square"></td>
+            <td id="5-4" class="square"></td>
+            <td id="5-5" class="square"></td>
+          </tr>
+        </table>
+        </div>
         <div class='sidebar'>
           <div class='level-board'>
             <p>
@@ -29,29 +80,34 @@
             </p>
           </div>
           <div class='current-piece-board'>
-            <h3>Current Piece</h3>
+            <h3>Current<br />Piece</h3>
             <div id='current-piece'>
             </div>
           </div>
           <div class='combinations'>
-            <ul>
-              <li>Item 1 - lorem ipsum</li>
-              <li>Item 2 - lorem ipsum</li>
-              <li>Item 3 - lorem ipsum</li>
-              <li>Item 4 - lorem ipsum</li>
+            <ul class='comb-list'>
+              <li class="comb-item"><img src="assets/img/icons/004-circus.png"></li> >
+              <li class="comb-item"><img src="assets/img/icons/006-house.png"></li> >
+              <li class="comb-item"><img src="assets/img/icons/005-house-1.png"></li> >
+              <li class="comb-item"><img src="assets/img/icons/007-building-2.png"></li> >
+              <li class="comb-item"><img src="assets/img/icons/009-school.png"></li> >
+              <li class="comb-item"><img src="assets/img/icons/010-building-1.png"></li> >
+              <li class="comb-item"><img src="assets/img/icons/011-building.png"></li> >
+              <li class="comb-item"><img src="assets/img/icons/008-skyscraper.png"></li> >
+              <li class="comb-item"><img src="assets/img/icons/012-city.png"></li>
             </ul>
           </div>
         </section>
         <section class='rules'>
-          <!-- <h2>Rules</h2> -->
           <ul>
-            <li>Rule 1 - lorem ipsum dolor </li>
-            <li>Rule 2 - lorem ipsum dolor </li>
-            <li>Rule 3 - lorem ipsum dolor </li>
-            <li>Rule 4 - lorem ipsum dolor </li>
+            <li>Lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor</li>
+            <li>Lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor</li>
+            <li>Lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor</li>
+            <li>Lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor</li>
           </ul>
         </section>
       </div>
     </main>
+
   </body>
 </html>

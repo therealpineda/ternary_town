@@ -1,3 +1,34 @@
+export class Square {
+  constructor(row, col) {
+    this.htmlElement = document.getElementById(`${row}-${col}`);
+    this.row = row;
+    this.col = col;
+    this.sqNumber = (row * 6) + col;
+    this.val = '';
+  }
+
+  drawSquare(val) {
+    const square = this.htmlElement;
+    if (!val) {
+      val = this.val
+      square.style.backgroundColor = '#fff';
+    } else {
+      square.style.backgroundColor = 'lightblue';
+    }
+    const img = new Image();
+    img.src = getImage(val);
+    square.innerHTML = '';
+    square.appendChild(img);
+  }
+
+  hoverPiece(currentPieceVal) {
+    if (!this.val) {
+      this.drawSquare(currentPieceVal);
+      this.htmlElement.addEventListener('mouseleave', this.drawSquare.bind(this));
+    }
+  }
+}
+
 export const getImage = (pieceVal) => {
   switch (pieceVal) {
     case 1:
@@ -18,49 +49,9 @@ export const getImage = (pieceVal) => {
       return 'assets/img/icons/008-skyscraper.png';
     case 9:
       return 'assets/img/icons/012-city.png';
+    case 10:
+      return 'assets/img/icons/003-hot-dog-cart.png';
     default:
       return 'assets/img/icons/blank.png';
   }
 };
-
-export class Square {
-  constructor(x, y, canvas) {
-    this.square = new createjs.Shape();
-    this.sqNumber = ((y / 50) * 6) + (x / 50) + 1;
-    this.x = x;
-    this.y = y;
-    this.val = '';
-    canvas.addChild(this.square);
-    this.canvas = canvas;
-  }
-
-  drawSquare() {
-    this.populateImage(this.val);
-  }
-
-  populateImage(val) {
-    const img = new Image();
-    img.src = getImage(val);
-    img.onload = () => {
-      const x = this.x;
-      const y = this.y;
-      const matrix = new createjs.Matrix2D();
-      matrix.translate(x + 2.5, y + 2.5);
-      matrix.scale(45/img.width, 45/img.height);
-      this.square.graphics
-        .clear()
-        .beginStroke("black")
-        .beginBitmapFill(img, "no-repeat", matrix)
-        .drawRect(x, y, 50, 50);
-      this.canvas.update();
-    }
-  }
-
-  hoverPiece(currentPiece) {
-    if (!this.val) {
-      this.populateImage(currentPiece);
-    }
-  }
-}
-
-// export default Square;
