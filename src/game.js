@@ -18,6 +18,7 @@ class TernaryTown {
     this.pieceBoard = document.getElementById('current-piece');
     this.grid = [];
     this.carts = [];
+    this.fruitStands = [];
     this.createBoard(numStartingPieces);
     this.startGameListeners();
     this.nextPiece();
@@ -61,13 +62,13 @@ class TernaryTown {
     this.htmlElement.addEventListener('mousemove', function(evt) {
       self.drawSquares();
       const square = self.getSquare(evt);
-      square[0].hoverPiece(self.currentPieceVal);
+      square.hoverPiece(self.currentPieceVal);
     });
 
     this.htmlElement.addEventListener('click', function(evt) {
       const clickedSq = self.getSquare(evt);
       const square = self.getSquare(evt);
-      self.makeMove(...square);
+      self.makeMove(square);
     });
   }
 
@@ -76,26 +77,23 @@ class TernaryTown {
     const mouseY = evt.pageY - this.htmlElement.offsetTop;
     const sqX = Math.floor(mouseX / 50.1);
     const sqY = Math.floor(mouseY / 50.1);
-    return [this.grid[sqY][sqX], sqX, sqY];
+    return this.grid[sqY][sqX];
   }
 
-  makeMove(clickedSq, sqX, sqY) {
+  makeMove(clickedSq) {
     if (this.validMove(clickedSq)) {
       clickedSq.val = this.currentPieceVal;
-      let matches = this.findMatches(clickedSq, sqX, sqY);
-      if (matches.length >= 2) {
-        while (matches.length >= 2) {
-          this.renderMatch(clickedSq, matches);
-          this.updateScore((clickedSq.val - 1) * 100 * (matches.length + 1));
-          matches = this.findMatches(clickedSq, sqX, sqY);
-        }
-      } else {
-        this.updateScore(clickedSq.val * 10);
-      }
+      this.makeMatches(clickedSq);
+      // this.matchEnemies();
       this.checkOver();
       this.moveCarts();
       if (clickedSq.val === 10) {
-        this.carts.push(clickedSq);
+        if (this.checkTrapped(clickedSq)) {
+          this.makeFruitStand(clickedSq);
+        } else {
+          clickedSq.age = new Date();
+          this.carts.push(clickedSq);
+        }
       }
       this.nextPiece();
     }
@@ -110,16 +108,16 @@ class TernaryTown {
     return true;
   }
 
-  findMatches(clickedSq, sqX, sqY) {
-    const matchVal = clickedSq.val;
+  findMatches(targetSq) {
+    const matchVal = targetSq.val;
 
     const matches = [];
     DELTAS.forEach((d) => {
-      const neighX = sqX + d[0];
-      const neighY = sqY + d[1];
+      const neighX = targetSq.col + d[0];
+      const neighY = targetSq.row + d[1];
       if (neighX >= 0 && neighX <= 5 && neighY >= 0 && neighY <= 5) {
         const neighSq = this.grid[neighY][neighX]
-        if (neighSq.val === matchVal) {
+        if (neighSq.val === matchVal && matchVal !== 10) {
           matches.push(neighSq);
         }
       }
@@ -131,7 +129,7 @@ class TernaryTown {
         const neighY = match.row + d[1];
         if (neighX >= 0 && neighX <= 5 && neighY >= 0 && neighY <= 5) {
           const neighborSq = this.grid[neighY][neighX]
-          if (!matches.includes(neighborSq) && neighborSq.sqNumber !== clickedSq.sqNumber) {
+          if (!matches.includes(neighborSq) && neighborSq.sqNumber !== targetSq.sqNumber) {
             if (neighborSq.val === matchVal) {
               matches.push(neighborSq);
             }
@@ -140,6 +138,21 @@ class TernaryTown {
       });
     });
     return matches;
+  }
+
+  makeMatches(targetSq) {
+    let addedScore = 0;
+    let matches = this.findMatches(targetSq);
+    if (matches.length >= 2) {
+      while (matches.length >= 2) {
+        this.renderMatch(targetSq, matches);
+        addedScore += ((targetSq.val - 1) * 100 * (matches.length + 1));
+        matches = this.findMatches(targetSq);
+      }
+    } else {
+      addedScore += (targetSq.val * 10);
+    }
+    this.updateScore(addedScore);
   }
 
   updateScore(num) {
@@ -154,46 +167,110 @@ class TernaryTown {
   }
 
   renderMatch(clickedSq, matches) {
-    if (clickedSq.val < 9) {
-      clickedSq.val += 1;
-    } else {
-      clickedSq.val = '';
-    }
+    clickedSq.val += 1;
+    // if (clickedSq.val < 9) {
+    // } else {
+    //   clickedSq.val = '';
+    // }
     matches.forEach((match) => {
       match.val = '';
     });
-    // this.drawSquares();
   }
 
   moveCarts() {
-    self = this;
+    const self = this;
     const newCarts = [];
     this.carts.forEach((cart) => {
-      const posMoves = [];
-      DELTAS.forEach((d) => {
-        const neighX = cart.col + d[0];
-        const neighY = cart.row + d[1];
-        if (neighX >= 0 && neighX <= 5 && neighY >= 0 && neighY <= 5) {
-          const neighSq = this.grid[neighY][neighX]
-          if (!neighSq.val) {
-            posMoves.push([neighX, neighY]);
-          }
+      const posMoves = this.posCartMoves(cart);
+      if (posMoves.length > 0) {
+        const randomMove = posMoves[Math.floor(Math.random() * posMoves.length)]
+        const destinationSq = this.grid[randomMove[1]][randomMove[0]];
+        destinationSq.val = cart.val;
+        cart.val = "";
+        newCarts.push(destinationSq);
+      } else {
+        if (this.checkTrapped(cart, cart.col, cart.row)) {
+          this.makeFruitStand(cart);
+        } else {
+          newCarts.push(cart);
         }
-      });
-      console.log(posMoves);
-      const randomMove = posMoves[Math.floor(Math.random() * posMoves.length)]
-      console.log(randomMove);
-      const destinationSq = self.grid[randomMove[1]][randomMove[0]];
-      destinationSq.val = cart.val;
-      cart.val = "";
-      newCarts.push(destinationSq);
+      }
     });
     this.carts = newCarts;
+  }
+
+  posCartMoves(cart) {
+    const posMoves = [];
+    DELTAS.forEach((d) => {
+      const neighX = cart.col + d[0];
+      const neighY = cart.row + d[1];
+      if (neighX >= 0 && neighX <= 5 && neighY >= 0 && neighY <= 5) {
+        const neighSq = this.grid[neighY][neighX]
+        if (!neighSq.val) {
+          posMoves.push([neighX, neighY]);
+        }
+      }
+    });
+    return posMoves;
+  }
+
+  getNeighbors(square) {
+    const neighbors = []
+    DELTAS.forEach((d) => {
+      const neighX = square.col + d[0];
+      const neighY = square.row + d[1];
+      if (neighX >= 0 && neighX <= 5 && neighY >= 0 && neighY <= 5) {
+        const neighSq = this.grid[neighY][neighX]
+        neighbors.push(neighSq);
+      }
+    });
+    return neighbors;
+  }
+
+  checkTrapped(cart) {
+    const neighbors = this.getNeighbors(cart);
+    if (neighbors.every((neighbor) => { return neighbor.val && neighbor.val !== cart.val})) {
+      return true;
+    } else {
+      const otherTrapped = [];
+      const self = this;
+      neighbors.forEach((neighbor) => {
+        if (neighbor.val === 10) {
+          const neighbors = self.getNeighbors(neighbor);
+
+        }
+      });
+    }
+
+
+    // matches.forEach((match) => {
+    //   DELTAS.forEach((d) => {
+    //     const neighX = match.col + d[0];
+    //     const neighY = match.row + d[1];
+    //     if (neighX >= 0 && neighX <= 5 && neighY >= 0 && neighY <= 5) {
+    //       const neighborSq = this.grid[neighY][neighX]
+    //       if (!matches.includes(neighborSq) && neighborSq.sqNumber !== clickedSq.sqNumber) {
+    //         if (neighborSq.val === matchVal) {
+    //           matches.push(neighborSq);
+    //         }
+    //       }
+    //     }
+    //   });
+    // });
+    return false;
+
+  }
+
+  makeFruitStand(targetSq) {
+    targetSq.val = 11;
+    targetSq.age = new Date();
+    this.makeMatches(targetSq);
   }
 
   nextPiece() {
     let randomVal = 10;
     const notEnemy = Math.random();
+    // % chance piece will be an enemy... will evenutally increase w level as well
     if (notEnemy < .5) {
       const i = this.level + 1;
       randomVal = Math.ceil(Math.random() * i * Math.random())

@@ -5,6 +5,7 @@ export class Square {
     this.col = col;
     this.sqNumber = (row * 6) + col;
     this.val = '';
+    this.age = new Date();
   }
 
   drawSquare(val) {
@@ -51,6 +52,10 @@ export const getImage = (pieceVal) => {
       return 'assets/img/icons/012-city.png';
     case 10:
       return 'assets/img/icons/003-hot-dog-cart.png';
+    case 11:
+      return 'assets/img/icons/002-vegetable-shop.png';
+    case 12:
+      return 'assets/img/icons/001-shop.png';
     default:
       return 'assets/img/icons/blank.png';
   }
