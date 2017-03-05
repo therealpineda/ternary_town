@@ -12,9 +12,9 @@ export class Square {
     const square = this.htmlElement;
     if (!val) {
       val = this.val
-      square.style.backgroundColor = '#fff';
+      // square.style.backgroundColor = '#fff';
     } else {
-      square.style.backgroundColor = 'lightblue';
+      // square.style.backgroundColor = 'lightblue';
     }
     const img = new Image();
     img.src = getImage(val);
@@ -33,29 +33,29 @@ export class Square {
 export const getImage = (pieceVal) => {
   switch (pieceVal) {
     case 1:
-      return 'assets/img/icons/004-circus.png';
+      return 'assets/img/icons/1.png';
     case 2:
-      return 'assets/img/icons/006-house.png';
+      return 'assets/img/icons/2.png';
     case 3:
-      return 'assets/img/icons/005-house-1.png';
+      return 'assets/img/icons/3.png';
     case 4:
-      return 'assets/img/icons/007-building-2.png';
+      return 'assets/img/icons/4.png';
     case 5:
-      return 'assets/img/icons/009-school.png';
+      return 'assets/img/icons/5.png';
     case 6:
-      return 'assets/img/icons/010-building-1.png';
+      return 'assets/img/icons/6.png';
     case 7:
-      return 'assets/img/icons/011-building.png';
+      return 'assets/img/icons/7.png';
     case 8:
-      return 'assets/img/icons/008-skyscraper.png';
+      return 'assets/img/icons/8.png';
     case 9:
-      return 'assets/img/icons/012-city.png';
+      return 'assets/img/icons/9.png';
     case 10:
-      return 'assets/img/icons/003-hot-dog-cart.png';
+      return 'assets/img/icons/e1.png';
     case 11:
-      return 'assets/img/icons/002-vegetable-shop.png';
+      return 'assets/img/icons/e2.png';
     case 12:
-      return 'assets/img/icons/001-shop.png';
+      return 'assets/img/icons/e3.png';
     default:
       return 'assets/img/icons/blank.png';
   }

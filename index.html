@@ -3,16 +3,20 @@
   <head>
     <meta charset='utf-8'>
     <title>Ternary Town</title>
-    <script src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
+    <script src="https://use.fontawesome.com/2425e0462d.js"></script>
     <script type="text/javascript" src='assets/js/bundle.js'></script>
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
   </head>
   <body>
 
-    <header><h1>Ternary Town</h1></header>
-    <main class='main-app'>
+    <header class="fadeIn">
+      <h1>Ternary Town</h1>
+      <!-- <h2>&nbsp;matchingSquares.length >= 3 ?</h2> -->
+    </header>
+    <main id='app-slide' class='hidden'>
       <section class='game'>
+        <div class='game-background'>
         <div class='game-board-container'>
           <table id='game-board'>
           <tr id='game-row-0'>
@@ -65,6 +69,7 @@
           </tr>
         </table>
         </div>
+      </div>
         <div class='sidebar'>
           <div class='level-board'>
             <p>
@@ -76,7 +81,7 @@
             <p>
               <span class='score-text'>Score&nbsp;</span>
               <span id='score'>0</span>
-              <p id='added-score'>&nbsp;</p>
+              <span id='added-score'>&nbsp;</span>
             </p>
           </div>
           <div class='current-piece-board'>
@@ -84,27 +89,30 @@
             <div id='current-piece'>
             </div>
           </div>
-          <div class='combinations'>
-            <ul class='comb-list'>
-              <li class="comb-item"><img src="assets/img/icons/004-circus.png"></li> >
-              <li class="comb-item"><img src="assets/img/icons/006-house.png"></li> >
-              <li class="comb-item"><img src="assets/img/icons/005-house-1.png"></li> >
-              <li class="comb-item"><img src="assets/img/icons/007-building-2.png"></li> >
-              <li class="comb-item"><img src="assets/img/icons/009-school.png"></li> >
-              <li class="comb-item"><img src="assets/img/icons/010-building-1.png"></li> >
-              <li class="comb-item"><img src="assets/img/icons/011-building.png"></li> >
-              <li class="comb-item"><img src="assets/img/icons/008-skyscraper.png"></li> >
-              <li class="comb-item"><img src="assets/img/icons/012-city.png"></li>
-            </ul>
-          </div>
-        </section>
-        <section class='rules'>
+          <div class="rules">
           <ul>
-            <li>Lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor</li>
-            <li>Lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor</li>
-            <li>Lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor</li>
-            <li>Lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor</li>
+            <li>
+              <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp;
+              Match three or more to upgrade.
+            </li>
+            <li>
+              <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp;
+              Better buildings at higher levels.
+            </li>
+            <li>
+              <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp;
+              Tractors move with each turn.
+            </li>
+            <li>
+              <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp;
+              Trap tractors to turn them into flowers.
+            </li>
+            <li>
+              <i class="fa fa-check-square-o" aria-hidden="true"></i> &nbsp;
+              The game is over when the town is full.
+            </li>
           </ul>
+        </div>
         </section>
       </div>
     </main>

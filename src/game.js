@@ -75,8 +75,12 @@ class TernaryTown {
   getSquare(evt) {
     const mouseX = evt.pageX - this.htmlElement.offsetLeft;
     const mouseY = evt.pageY - this.htmlElement.offsetTop;
-    const sqX = Math.floor(mouseX / 50.1);
-    const sqY = Math.floor(mouseY / 50.1);
+    // console.log('mouseX: ' + mouseX)
+    // console.log('mouseY: ' + mouseY)
+    const sqX = Math.floor(mouseX / 75.1);
+    const sqY = Math.floor(mouseY / 75.1);
+    // console.log('squareX: ' + sqX)
+    // console.log('squareY: ' + sqY)
     return this.grid[sqY][sqX];
   }
 
@@ -108,31 +112,31 @@ class TernaryTown {
     return true;
   }
 
+  getNeighbors(square) {
+    const neighbors = []
+    DELTAS.forEach((d) => {
+      const neighX = square.col + d[0];
+      const neighY = square.row + d[1];
+      if (neighX >= 0 && neighX <= 5 && neighY >= 0 && neighY <= 5) {
+        const neighSq = this.grid[neighY][neighX]
+        neighbors.push(neighSq);
+      }
+    });
+    return neighbors;
+  }
+
   findMatches(targetSq) {
     const matchVal = targetSq.val;
 
-    const matches = [];
-    DELTAS.forEach((d) => {
-      const neighX = targetSq.col + d[0];
-      const neighY = targetSq.row + d[1];
-      if (neighX >= 0 && neighX <= 5 && neighY >= 0 && neighY <= 5) {
-        const neighSq = this.grid[neighY][neighX]
-        if (neighSq.val === matchVal && matchVal !== 10) {
-          matches.push(neighSq);
-        }
-      }
+    const matches = this.getNeighbors(targetSq).filter((neigh) => {
+      return (neigh.val === matchVal && matchVal !== 10)
     });
 
     matches.forEach((match) => {
-      DELTAS.forEach((d) => {
-        const neighX = match.col + d[0];
-        const neighY = match.row + d[1];
-        if (neighX >= 0 && neighX <= 5 && neighY >= 0 && neighY <= 5) {
-          const neighborSq = this.grid[neighY][neighX]
-          if (!matches.includes(neighborSq) && neighborSq.sqNumber !== targetSq.sqNumber) {
-            if (neighborSq.val === matchVal) {
-              matches.push(neighborSq);
-            }
+      this.getNeighbors(match).forEach((neigh) => {
+        if (!matches.includes(neigh) && neigh.sqNumber !== targetSq.sqNumber) {
+          if (neigh.val === matchVal) {
+            matches.push(neigh);
           }
         }
       });
@@ -157,7 +161,7 @@ class TernaryTown {
 
   updateScore(num) {
     this.score += num;
-    this.level = Math.floor(this.score / 10000);
+    this.level = Math.floor(this.score / 10000) + 1;
     window.setTimeout(() => {
       this.addedScore.innerHTML = `&nbsp;`;
       this.scoreboard.innerHTML = this.score;
@@ -167,14 +171,14 @@ class TernaryTown {
   }
 
   renderMatch(clickedSq, matches) {
-    clickedSq.val += 1;
-    // if (clickedSq.val < 9) {
-    // } else {
-    //   clickedSq.val = '';
-    // }
-    matches.forEach((match) => {
-      match.val = '';
-    });
+    if (clickedSq.val === 9 || clickedSq.val === 12) {
+      clickedSq.val = '';
+    } else {
+      clickedSq.val += 1;
+      matches.forEach((match) => {
+        match.val = '';
+      });
+    }
   }
 
   moveCarts() {
@@ -183,8 +187,7 @@ class TernaryTown {
     this.carts.forEach((cart) => {
       const posMoves = this.posCartMoves(cart);
       if (posMoves.length > 0) {
-        const randomMove = posMoves[Math.floor(Math.random() * posMoves.length)]
-        const destinationSq = this.grid[randomMove[1]][randomMove[0]];
+        const destinationSq = posMoves[Math.floor(Math.random() * posMoves.length)]
         destinationSq.val = cart.val;
         cart.val = "";
         newCarts.push(destinationSq);
@@ -200,65 +203,31 @@ class TernaryTown {
   }
 
   posCartMoves(cart) {
-    const posMoves = [];
-    DELTAS.forEach((d) => {
-      const neighX = cart.col + d[0];
-      const neighY = cart.row + d[1];
-      if (neighX >= 0 && neighX <= 5 && neighY >= 0 && neighY <= 5) {
-        const neighSq = this.grid[neighY][neighX]
-        if (!neighSq.val) {
-          posMoves.push([neighX, neighY]);
-        }
-      }
-    });
-    return posMoves;
-  }
-
-  getNeighbors(square) {
-    const neighbors = []
-    DELTAS.forEach((d) => {
-      const neighX = square.col + d[0];
-      const neighY = square.row + d[1];
-      if (neighX >= 0 && neighX <= 5 && neighY >= 0 && neighY <= 5) {
-        const neighSq = this.grid[neighY][neighX]
-        neighbors.push(neighSq);
-      }
-    });
-    return neighbors;
+    return this.getNeighbors(cart).filter((neigh) => {
+      return !neigh.val;
+    })
   }
 
   checkTrapped(cart) {
+    let trapped = false;
     const neighbors = this.getNeighbors(cart);
     if (neighbors.every((neighbor) => { return neighbor.val && neighbor.val !== cart.val})) {
       return true;
     } else {
-      const otherTrapped = [];
+      const posTrapped = [cart];
       const self = this;
       neighbors.forEach((neighbor) => {
         if (neighbor.val === 10) {
-          const neighbors = self.getNeighbors(neighbor);
-
+          posTrapped.push(neighbor);
+          const cartNeighbors = self.getNeighbors(neighbor);
+          cartNeighbors.forEach((n) => {
+            if (n.val === 10 && !posTrapped.includes(n)) {
+            }
+          });
         }
       });
     }
-
-
-    // matches.forEach((match) => {
-    //   DELTAS.forEach((d) => {
-    //     const neighX = match.col + d[0];
-    //     const neighY = match.row + d[1];
-    //     if (neighX >= 0 && neighX <= 5 && neighY >= 0 && neighY <= 5) {
-    //       const neighborSq = this.grid[neighY][neighX]
-    //       if (!matches.includes(neighborSq) && neighborSq.sqNumber !== clickedSq.sqNumber) {
-    //         if (neighborSq.val === matchVal) {
-    //           matches.push(neighborSq);
-    //         }
-    //       }
-    //     }
-    //   });
-    // });
-    return false;
-
+    return trapped;
   }
 
   makeFruitStand(targetSq) {
@@ -271,7 +240,7 @@ class TernaryTown {
     let randomVal = 10;
     const notEnemy = Math.random();
     // % chance piece will be an enemy... will evenutally increase w level as well
-    if (notEnemy < .5) {
+    if (notEnemy < .93) {
       const i = this.level + 1;
       randomVal = Math.ceil(Math.random() * i * Math.random())
     }
@@ -295,8 +264,6 @@ class TernaryTown {
     });
     return gameOver;
   }
-
-
 };
 
 export default TernaryTown;
