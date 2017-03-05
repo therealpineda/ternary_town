@@ -12,9 +12,6 @@ export class Square {
     const square = this.htmlElement;
     if (!val) {
       val = this.val
-      // square.style.backgroundColor = '#fff';
-    } else {
-      // square.style.backgroundColor = 'lightblue';
     }
     const img = new Image();
     img.src = getImage(val);

@@ -163,12 +163,8 @@ var TernaryTown = function () {
     value: function getSquare(evt) {
       var mouseX = evt.pageX - this.htmlElement.offsetLeft;
       var mouseY = evt.pageY - this.htmlElement.offsetTop;
-      // console.log('mouseX: ' + mouseX)
-      // console.log('mouseY: ' + mouseY)
       var sqX = Math.floor(mouseX / 75.1);
       var sqY = Math.floor(mouseY / 75.1);
-      // console.log('squareX: ' + sqX)
-      // console.log('squareY: ' + sqY)
       return this.grid[sqY][sqX];
     }
   }, {
@@ -417,10 +413,7 @@ var Square = exports.Square = function () {
       var square = this.htmlElement;
       if (!val) {
         val = this.val;
-        // square.style.backgroundColor = '#fff';
-      } else {
-          // square.style.backgroundColor = 'lightblue';
-        }
+      }
       var img = new Image();
       img.src = getImage(val);
       square.innerHTML = '';

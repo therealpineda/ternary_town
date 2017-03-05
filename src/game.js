@@ -75,12 +75,8 @@ class TernaryTown {
   getSquare(evt) {
     const mouseX = evt.pageX - this.htmlElement.offsetLeft;
     const mouseY = evt.pageY - this.htmlElement.offsetTop;
-    // console.log('mouseX: ' + mouseX)
-    // console.log('mouseY: ' + mouseY)
     const sqX = Math.floor(mouseX / 75.1);
     const sqY = Math.floor(mouseY / 75.1);
-    // console.log('squareX: ' + sqX)
-    // console.log('squareY: ' + sqY)
     return this.grid[sqY][sqX];
   }
 
