@@ -478,10 +478,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 document.addEventListener('DOMContentLoaded', function () {
   new _game2.default();
-  window.setTimeout(function () {
-    var app = document.getElementById('app-slide');
-    app.className = 'main-app expandUp';
-  }, 600);
 });
 
 /***/ })
