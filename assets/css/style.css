@@ -20,78 +20,52 @@ img {
 /* BODY STYLE */
 
 html {
-  background-color: #264E57;
-  color: #fff;
+  background-color: #68d0a0;
+  color: #000;
 }
 
 body {
-  width: 850px;
-  margin: 20px auto;
+  width: 805px;
+  margin: 0px auto;
   font-family: 'Lato', sans-serif;
-}
-
-main {
-}
-
-section {
 }
 
 /* HEADER */
 
 header {
-  margin-bottom: 20px;
-  /*display: flex;
-  justify-content: space-between;
-  align-items: center;*/
-  letter-spacing: 1.2px;
+  margin: 20px 0 10px 0;
+  letter-spacing: .9px;
+  position: relative;
 }
 
 header h1 {
-  color: #fff;
+  color: #000;
   font-size: 3em;
-  /*font-weight: bold;*/
-  text-shadow: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0,0,0,.1), 0 0 5px rgba(0,0,0,.1), 0 1px 3px rgba(0,0,0,.3), 0 3px 5px rgba(0,0,0,.2), 0 5px 10px rgba(0,0,0,.25), 0 10px 10px rgba(0,0,0,.2), 0 20px 20px rgba(0,0,0,.15);
-}
-
-header h2 {
-  font-size: 16px;
-  text-shadow: #000 1px 1px 5px;
+  font-family: 'Fredoka One', sans-serif;;
+  text-shadow: 0px 1px 0px rgba(255,255,255,.6), 0px -1px 0px rgba(0,0,0,.8);
 }
 
 /* MAIN */
 
 .game {
-  margin-bottom: 10px;
-  border-radius: 3px;
   display: flex;
-}
-
-.game-background {
-  background-color: #7ec59e;
-  border-radius: 3px;
-  -webkit-box-shadow: 4px 4px 7px 0px rgba(0,0,0,0.75);
-  -moz-box-shadow: 4px 4px 7px 0px rgba(0,0,0,0.75);
-  box-shadow: 4px 4px 7px 0px rgba(0,0,0,0.75);
-  margin-right: 20px;
 }
 
 .game-board-container {
   height: 500px;
   width: 500px;
-  margin: 4px 7px 6px 3px;
   padding: 25px;
-  border-radius: 3px;
+  border-radius: 10px;
   background-image: url('../img/background/background.png');
 }
 
 #game-board {
   width: 450px;
-  margin-right: 10px;
   border-collapse: collapse;
 }
 
 tr:hover td {
-  /*background-color: #1CC81C;*/
+  /*background-color: rgba(154, 146, 122, 0.18);*/
 }
 
 .square {
@@ -108,65 +82,45 @@ tr:hover td {
 
 .sidebar {
   width: 100%;
-  margin-top: 20px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  padding: 20px 15px;
+  margin: 5px 0 5px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.28);
+  outline: 1px dashed rgba(0, 0, 0, 0.28);
+  outline: 1px dashed #CBE4F5;
+  outline-offset: -5px;
+  background-color: #97C2E1;
   font-size: 16px;
 }
 
-.level-board {
-  width: 66%;
-  padding-bottom: 4px;
-  border-bottom: 1px solid #000;
-
-}
-
-.level-board p {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-#level {
-  font-size: 26px;
-}
-
 .score-board {
-  margin-top: 5px;
-  margin-bottom: 15px;
-}
-
-.level-text {
-  letter-spacing: .6px;
-}
-
-#score {
-  font-weight: 700;
-  margin-right: 5px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.28);
+  font-size: 18px;
 }
 
 #added-score {
-  color: #FFB8A3;
+  margin-left: 5px;
+  color: #2C6A96;
+  font-weight: bold;
 }
 
-.current-piece-board {
+.level-piece-board {
   display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  margin-bottom: 20px;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+#level {
+  font-size: 32px;
+  margin-bottom: 10px;
 }
 
 #current-piece {
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
+  margin: 10px 0;
   border: 1px solid rgba(0, 0, 0, 0.28);
-  margin-left: 8px;
-  -webkit-box-shadow: 3px 3px 6px 0px rgba(0,0,0,0.75);
-  -moz-box-shadow: 3px 3px 6px 0px rgba(0,0,0,0.75);
-  box-shadow: 3px 3px 6px 0px rgba(0,0,0,0.75);
-  background-color: transparent;
 }
 
 .rules {
@@ -175,22 +129,77 @@ tr:hover td {
   height: 40%;
 }
 
-.rules ul {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-}
-
 .rules li {
-  margin: 4px 0;
-  font-weight: 100;
+  margin-bottom: 4px;
 }
 
 /* ANIMATIONS */
 
 .hidden {
   display: none;
+}
+
+.sign {
+  position: absolute;
+  width: 40px;
+  left: 425px;
+  top: 30px;
+}
+
+.tree {
+  position: absolute;
+  width: 40px;
+  left: -9px;
+  top: 38px;
+}
+
+.text1 {
+  position: absolute;
+  width: 16px;
+  left: 332px;
+  top: 52px;
+}
+
+.text2 {
+  position: absolute;
+  width: 16px;
+  left: 460px;
+  top: 23px;
+}
+
+.balloon {
+  position: absolute;
+  width: 75px;
+  left: 355px;
+  top: -15px;
+  animation-name: fly;
+    -webkit-animation-name: fly;
+  animation-duration: 40s;
+    -webkit-animation-duration: 40s;
+  animation-delay: 5s;
+    -webkit-animation-delay: 5s;
+  animation-iteration-count: infinite;
+    -webkit-animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+    -webkit-animation-timing-function: ease-in-out;
+  animation-direction: alternate;
+    -webkit-animation-direction: alternate;
+}
+
+@keyframes fly {
+    0%   {left:355px; top:-15px;}
+    25%  {left:350px; top:-10px;}
+    50%  {left:355px; top:-5px;}
+    70%  {left:350px; top:-7px;}
+    100% {left:355px; top:-15px;}
+}
+
+@-webkit-keyframes fly {
+    0%   {left:350px; top:-15px;}
+    25%  {left:345px; top:-10px;}
+    50%  {left:350px; top:-5px;}
+    70%  {left:345px; top:-7px;}
+    100% {left:350px; top:-15px;}
 }
 
 .fadeIn{
