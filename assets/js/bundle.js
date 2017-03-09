@@ -435,8 +435,8 @@ var Board = function () {
         }
       } else {
         addedScore += targetSq.val * 10;
+        this.audio.build();
       }
-      this.audio.build();
       this.updateScore(addedScore);
     }
   }, {
@@ -463,6 +463,11 @@ var Board = function () {
         matches.forEach(function (match) {
           match.val = '';
         });
+      }
+      if (clickedSq.val > 6 && clickedSq.val < 10) {
+        this.audio.cheer();
+      } else {
+        this.audio.build();
       }
     }
   }, {
@@ -640,6 +645,14 @@ var Audio = function () {
     value: function invalid() {
       if (!this.soundMuted) {
         this.sounds.src = "assets/sound/invalid.wav";
+        this.sounds.play();
+      }
+    }
+  }, {
+    key: 'cheer',
+    value: function cheer() {
+      if (!this.soundMuted) {
+        this.sounds.src = "assets/sound/cheer.wav";
         this.sounds.play();
       }
     }

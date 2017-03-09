@@ -153,8 +153,8 @@ class Board {
       }
     } else {
       addedScore += (targetSq.val * 10);
+      this.audio.build();
     }
-    this.audio.build();
     this.updateScore(addedScore);
   }
 
@@ -177,6 +177,11 @@ class Board {
       matches.forEach((match) => {
         match.val = '';
       });
+    }
+    if (clickedSq.val > 6 && clickedSq.val < 10) {
+      this.audio.cheer();
+    } else {
+      this.audio.build();
     }
   }
 

@@ -70,6 +70,13 @@ class Audio {
       this.sounds.play();
     }
   }
+
+  cheer() {
+    if (!this.soundMuted) {
+      this.sounds.src = "assets/sound/cheer.wav";
+      this.sounds.play();
+    }
+  }
 }
 
 export default Audio;
