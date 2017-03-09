@@ -85,6 +85,10 @@
               <span id='score'>0</span>
               <span id='added-score'>&nbsp;</span>
             </p>
+            <div class='audio-controls'>
+              <i id="music-control" class="fa fa-music active-control" aria-hidden="true"></i>
+              <i id="sound-control" class="fa fa-volume-up active-control" aria-hidden="true"></i>
+            </div>
           </div>
           <div class='level-piece-board'>
             <span class='level-text'>Level&nbsp;</span>
@@ -116,10 +120,11 @@
               Game over when the town is full.
             </li>
           </ul>
+          <audio id='sound-player'></audio>
+          <audio id='music-player'></audio>
         </div>
         </section>
       </div>
     </main>
-
   </body>
 </html>

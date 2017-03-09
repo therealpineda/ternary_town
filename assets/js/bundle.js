@@ -79,11 +79,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _square = __webpack_require__(1);
+var _board = __webpack_require__(3);
+
+var _board2 = _interopRequireDefault(_board);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var DELTAS = [[0, -1], [1, 0], [0, 1], [-1, 0]];
 
 var TernaryTown = function () {
   function TernaryTown() {
@@ -92,27 +94,215 @@ var TernaryTown = function () {
     _classCallCheck(this, TernaryTown);
 
     this.htmlElement = document.getElementById('game-board');
-    this.score = 0;
-    this.scoreboard = document.getElementById('score');
-    this.addedScore = document.getElementById('added-score');
-    this.level = 0;
-    this.levelBoard = document.getElementById('level');
-    this.pieceBoard = document.getElementById('current-piece');
-    this.grid = [];
-    this.carts = [];
-    this.fruitStands = [];
-    this.createBoard(numStartingPieces);
+    this.board = new _board2.default(numStartingPieces);
     this.startGameListeners();
-    this.nextPiece();
   }
 
   _createClass(TernaryTown, [{
+    key: 'startGameListeners',
+    value: function startGameListeners() {
+      var self = this;
+      this.htmlElement.addEventListener('mousemove', function (evt) {
+        self.board.drawSquares();
+        var square = self.getSquare(evt);
+        self.board.hoverPiece(square);
+      });
+
+      this.htmlElement.addEventListener('click', function (evt) {
+        var square = self.getSquare(evt);
+        self.makeMove(square);
+      });
+    }
+  }, {
+    key: 'getSquare',
+    value: function getSquare(evt) {
+      var mouseX = evt.pageX - this.htmlElement.offsetLeft;
+      var mouseY = evt.pageY - this.htmlElement.offsetTop;
+      var x = Math.floor(mouseX / 75.1);
+      var y = Math.floor(mouseY / 75.1);
+      return this.board.getSquare(x, y);
+    }
+  }, {
+    key: 'makeMove',
+    value: function makeMove(square) {
+      this.board.makeMove(square);
+    }
+  }, {
+    key: 'gameOver',
+    value: function gameOver() {
+      if (this.board.boardFull()) {
+        alert('Game Over!');
+      }
+    }
+  }]);
+
+  return TernaryTown;
+}();
+
+;
+
+exports.default = TernaryTown;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Square = function () {
+  function Square(row, col) {
+    _classCallCheck(this, Square);
+
+    this.htmlElement = document.getElementById(row + '-' + col);
+    this.row = row;
+    this.col = col;
+    this.sqNumber = row * 6 + col;
+    this.val = '';
+    this.age = new Date();
+  }
+
+  _createClass(Square, [{
+    key: 'drawSquare',
+    value: function drawSquare(val) {
+      var square = this.htmlElement;
+      if (!val) {
+        val = this.val;
+      }
+      var img = new Image();
+      img.src = Square.getImage(val);
+      square.innerHTML = '';
+      square.appendChild(img);
+    }
+  }, {
+    key: 'hoverPiece',
+    value: function hoverPiece(currentPieceVal) {
+      if (!this.val) {
+        this.drawSquare(currentPieceVal);
+        this.htmlElement.addEventListener('mouseleave', this.drawSquare.bind(this));
+      }
+    }
+  }], [{
+    key: 'getImage',
+    value: function getImage(pieceVal) {
+      switch (pieceVal) {
+        case 1:
+          return 'assets/img/icons/1.png';
+        case 2:
+          return 'assets/img/icons/2.png';
+        case 3:
+          return 'assets/img/icons/3.png';
+        case 4:
+          return 'assets/img/icons/4.png';
+        case 5:
+          return 'assets/img/icons/5.png';
+        case 6:
+          return 'assets/img/icons/6.png';
+        case 7:
+          return 'assets/img/icons/7.png';
+        case 8:
+          return 'assets/img/icons/8.png';
+        case 9:
+          return 'assets/img/icons/9.png';
+        case 10:
+          return 'assets/img/icons/e1.png';
+        case 11:
+          return 'assets/img/icons/e2.png';
+        case 12:
+          return 'assets/img/icons/e3.png';
+        default:
+          return 'assets/img/icons/blank.png';
+      }
+    }
+  }]);
+
+  return Square;
+}();
+
+exports.default = Square;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _game = __webpack_require__(0);
+
+var _game2 = _interopRequireDefault(_game);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+document.addEventListener('DOMContentLoaded', function () {
+  new _game2.default();
+});
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _square = __webpack_require__(1);
+
+var _square2 = _interopRequireDefault(_square);
+
+var _audio = __webpack_require__(4);
+
+var _audio2 = _interopRequireDefault(_audio);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var DELTAS = [[0, -1], [1, 0], [0, 1], [-1, 0]];
+
+var Board = function () {
+  function Board(numStartingPieces) {
+    _classCallCheck(this, Board);
+
+    this.score = 0;
+    this.scoreboard = document.getElementById('score');
+    this.addedScore = document.getElementById('added-score');
+
+    this.grid = [];
+    this.carts = [];
+    this.fruitStands = [];
+
+    this.level = 0;
+    this.levelBoard = document.getElementById('level');
+    this.pieceBoard = document.getElementById('current-piece');
+    this.currentPieceVal = '';
+
+    this.audio = new _audio2.default();
+
+    this.createBoard(numStartingPieces);
+    this.nextPiece();
+  }
+
+  _createClass(Board, [{
     key: 'createBoard',
     value: function createBoard(numStartingPieces) {
       for (var i = 0; i < 6; i++) {
         var row = [];
         for (var j = 0; j < 6; j++) {
-          var sq = new _square.Square(i, j);
+          var sq = new _square2.default(i, j);
           row.push(sq);
         }
         this.grid.push(row);
@@ -130,42 +320,41 @@ var TernaryTown = function () {
       });
     }
   }, {
+    key: 'getSquare',
+    value: function getSquare(x, y) {
+      return this.grid[y][x];
+    }
+  }, {
     key: 'populateStartingPieces',
     value: function populateStartingPieces(numStartingPieces) {
       for (var i = 0; i < numStartingPieces; i++) {
         var x = Math.floor(Math.random() * 6);
         var y = Math.floor(Math.random() * 6);
         var val = Math.floor(Math.random() * i) + 1;
-        var square = this.grid[y][x];
+        var square = this.getSquare(x, y);
         if (!square.val) {
           square.val = val;
         }
       }
     }
   }, {
-    key: 'startGameListeners',
-    value: function startGameListeners() {
-      var self = this;
-      this.htmlElement.addEventListener('mousemove', function (evt) {
-        self.drawSquares();
-        var square = self.getSquare(evt);
-        square.hoverPiece(self.currentPieceVal);
-      });
-
-      this.htmlElement.addEventListener('click', function (evt) {
-        var clickedSq = self.getSquare(evt);
-        var square = self.getSquare(evt);
-        self.makeMove(square);
-      });
+    key: 'nextPiece',
+    value: function nextPiece() {
+      var randomVal = 10;
+      var notEnemy = Math.random();
+      // % chance piece will be an enemy... will evenutally increase w level as well
+      if (notEnemy < .93) {
+        var i = this.level + 1;
+        randomVal = Math.ceil(Math.random() * i * Math.random());
+      }
+      this.currentPieceVal = randomVal;
+      var imageSrc = _square2.default.getImage(this.currentPieceVal);
+      this.pieceBoard.innerHTML = '<img src="' + imageSrc + '">';
     }
   }, {
-    key: 'getSquare',
-    value: function getSquare(evt) {
-      var mouseX = evt.pageX - this.htmlElement.offsetLeft;
-      var mouseY = evt.pageY - this.htmlElement.offsetTop;
-      var sqX = Math.floor(mouseX / 75.1);
-      var sqY = Math.floor(mouseY / 75.1);
-      return this.grid[sqY][sqX];
+    key: 'hoverPiece',
+    value: function hoverPiece(square) {
+      square.hoverPiece(this.currentPieceVal);
     }
   }, {
     key: 'makeMove',
@@ -173,8 +362,6 @@ var TernaryTown = function () {
       if (this.validMove(clickedSq)) {
         clickedSq.val = this.currentPieceVal;
         this.makeMatches(clickedSq);
-        // this.matchEnemies();
-        this.checkOver();
         this.moveCarts();
         if (clickedSq.val === 10) {
           if (this.checkTrapped(clickedSq)) {
@@ -192,7 +379,7 @@ var TernaryTown = function () {
     key: 'validMove',
     value: function validMove(clickedSq) {
       if (clickedSq.val) {
-        alert('invalid move');
+        this.audio.invalid();
         return false;
       }
       return true;
@@ -204,10 +391,10 @@ var TernaryTown = function () {
 
       var neighbors = [];
       DELTAS.forEach(function (d) {
-        var neighX = square.col + d[0];
-        var neighY = square.row + d[1];
-        if (neighX >= 0 && neighX <= 5 && neighY >= 0 && neighY <= 5) {
-          var neighSq = _this.grid[neighY][neighX];
+        var x = square.col + d[0];
+        var y = square.row + d[1];
+        if (x >= 0 && x <= 5 && y >= 0 && y <= 5) {
+          var neighSq = _this.getSquare(x, y);
           neighbors.push(neighSq);
         }
       });
@@ -249,6 +436,7 @@ var TernaryTown = function () {
       } else {
         addedScore += targetSq.val * 10;
       }
+      this.audio.build();
       this.updateScore(addedScore);
     }
   }, {
@@ -340,48 +528,25 @@ var TernaryTown = function () {
       this.makeMatches(targetSq);
     }
   }, {
-    key: 'nextPiece',
-    value: function nextPiece() {
-      var randomVal = 10;
-      var notEnemy = Math.random();
-      // % chance piece will be an enemy... will evenutally increase w level as well
-      if (notEnemy < .93) {
-        var i = this.level + 1;
-        randomVal = Math.ceil(Math.random() * i * Math.random());
-      }
-      this.currentPieceVal = randomVal;
-      var imageSrc = (0, _square.getImage)(this.currentPieceVal);
-      this.pieceBoard.innerHTML = '<img src="' + imageSrc + '">';
-    }
-  }, {
-    key: 'checkOver',
-    value: function checkOver() {
-      if (this.gameOver()) {
-        alert('game over');
-      }
-    }
-  }, {
-    key: 'gameOver',
-    value: function gameOver() {
-      var gameOver = true;
+    key: 'boardFull',
+    value: function boardFull() {
+      var full = true;
       this.grid.forEach(function (row) {
         row.forEach(function (sq) {
-          if (!sq.val) gameOver = false;
+          if (!sq.val) full = false;
         });
       });
-      return gameOver;
+      return full;
     }
   }]);
 
-  return TernaryTown;
+  return Board;
 }();
 
-;
-
-exports.default = TernaryTown;
+exports.default = Board;
 
 /***/ }),
-/* 1 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -395,90 +560,95 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Square = exports.Square = function () {
-  function Square(row, col) {
-    _classCallCheck(this, Square);
+var Audio = function () {
+  function Audio() {
+    _classCallCheck(this, Audio);
 
-    this.htmlElement = document.getElementById(row + '-' + col);
-    this.row = row;
-    this.col = col;
-    this.sqNumber = row * 6 + col;
-    this.val = '';
-    this.age = new Date();
+    this.music = document.getElementById('music-player');
+    this.music.src = "assets/sound/bgm.ogg";
+    this.music.loop = true;
+    this.sounds = document.getElementById('sound-player');
+    this.sounds.sound = 0.1;
+    this.musicOn();
+    this.musicControl = document.getElementById('music-control');
+    this.soundControl = document.getElementById('sound-control');
+    this.addMusicOffListener();
+    this.addSoundOffListener();
+    this.soundMuted = false;
   }
 
-  _createClass(Square, [{
-    key: 'drawSquare',
-    value: function drawSquare(val) {
-      var square = this.htmlElement;
-      if (!val) {
-        val = this.val;
-      }
-      var img = new Image();
-      img.src = getImage(val);
-      square.innerHTML = '';
-      square.appendChild(img);
+  _createClass(Audio, [{
+    key: 'addMusicOffListener',
+    value: function addMusicOffListener() {
+      var self = this;
+      this.musicControl.addEventListener('click', function (evt) {
+        self.musicOff();
+        self.musicControl.className = "fa fa-music inactive-control";
+        self.addMusicOnListener();
+      });
     }
   }, {
-    key: 'hoverPiece',
-    value: function hoverPiece(currentPieceVal) {
-      if (!this.val) {
-        this.drawSquare(currentPieceVal);
-        this.htmlElement.addEventListener('mouseleave', this.drawSquare.bind(this));
+    key: 'addMusicOnListener',
+    value: function addMusicOnListener() {
+      var self = this;
+      this.musicControl.addEventListener('click', function (evt) {
+        self.musicOn();
+        self.musicControl.className = "fa fa-music active-control";
+        self.addMusicOffListener();
+      });
+    }
+  }, {
+    key: 'addSoundOffListener',
+    value: function addSoundOffListener() {
+      var self = this;
+      this.soundControl.addEventListener('click', function (evt) {
+        self.soundMuted = true;
+        self.soundControl.className = "fa fa-volume-off inactive-control";
+        self.addSoundOnListener();
+      });
+    }
+  }, {
+    key: 'addSoundOnListener',
+    value: function addSoundOnListener() {
+      var self = this;
+      this.soundControl.addEventListener('click', function (evt) {
+        self.soundMuted = false;
+        self.soundControl.className = "fa fa-volume-up active-control";
+        self.addSoundOffListener();
+      });
+    }
+  }, {
+    key: 'musicOn',
+    value: function musicOn() {
+      this.music.play();
+    }
+  }, {
+    key: 'musicOff',
+    value: function musicOff() {
+      this.music.pause();
+    }
+  }, {
+    key: 'build',
+    value: function build() {
+      if (!this.soundMuted) {
+        this.sounds.src = "assets/sound/build.wav";
+        this.sounds.play();
+      }
+    }
+  }, {
+    key: 'invalid',
+    value: function invalid() {
+      if (!this.soundMuted) {
+        this.sounds.src = "assets/sound/invalid.wav";
+        this.sounds.play();
       }
     }
   }]);
 
-  return Square;
+  return Audio;
 }();
 
-var getImage = exports.getImage = function getImage(pieceVal) {
-  switch (pieceVal) {
-    case 1:
-      return 'assets/img/icons/1.png';
-    case 2:
-      return 'assets/img/icons/2.png';
-    case 3:
-      return 'assets/img/icons/3.png';
-    case 4:
-      return 'assets/img/icons/4.png';
-    case 5:
-      return 'assets/img/icons/5.png';
-    case 6:
-      return 'assets/img/icons/6.png';
-    case 7:
-      return 'assets/img/icons/7.png';
-    case 8:
-      return 'assets/img/icons/8.png';
-    case 9:
-      return 'assets/img/icons/9.png';
-    case 10:
-      return 'assets/img/icons/e1.png';
-    case 11:
-      return 'assets/img/icons/e2.png';
-    case 12:
-      return 'assets/img/icons/e3.png';
-    default:
-      return 'assets/img/icons/blank.png';
-  }
-};
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _game = __webpack_require__(0);
-
-var _game2 = _interopRequireDefault(_game);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-document.addEventListener('DOMContentLoaded', function () {
-  new _game2.default();
-});
+exports.default = Audio;
 
 /***/ })
 /******/ ]);

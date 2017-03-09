@@ -96,12 +96,31 @@ tr:hover td {
   padding-bottom: 8px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.28);
   font-size: 18px;
+  display: flex;
+  justify-content: space-between;
 }
 
 #added-score {
   margin-left: 5px;
   color: #2C6A96;
   font-weight: bold;
+}
+
+.audio-controls i {
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.audio-controls i:hover {
+  cursor: pointer;
+}
+
+.inactive-control {
+  color: rgba(154, 146, 122, 0.58);
+}
+
+#sound-control {
+  min-width: 20px;
 }
 
 .level-piece-board {
