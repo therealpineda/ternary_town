@@ -11,31 +11,29 @@ class TernaryTown {
     const self = this;
     this.htmlElement.addEventListener('mousemove', function(evt) {
       self.board.drawSquares();
-      const square = self.getSquare(evt);
-      self.board.hoverPiece(square);
+      const coords = self.getCoords(evt);
+      self.board.hoverPiece(coords);
     });
 
     this.htmlElement.addEventListener('click', function(evt) {
-      const square = self.getSquare(evt);
-      self.makeMove(square);
+      const coords = self.getCoords(evt);
+      self.board.makeMove(coords);
+      self.gameOver();
     });
   }
 
-  getSquare(evt) {
+  getCoords(evt) {
     const mouseX = evt.pageX - this.htmlElement.offsetLeft;
     const mouseY = evt.pageY - this.htmlElement.offsetTop;
     const x = Math.floor(mouseX / 75.1);
     const y = Math.floor(mouseY / 75.1);
-    return this.board.getSquare(x,y);
-  }
-
-  makeMove(square) {
-    this.board.makeMove(square);
+    return [x,y];
   }
 
   gameOver() {
     if (this.board.boardFull()) {
-      alert('Game Over!');
+      const alert = document.getElementById('game-over');
+      alert.className = "";
     }
   }
 

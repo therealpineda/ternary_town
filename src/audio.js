@@ -4,7 +4,7 @@ class Audio {
     this.music.src = "assets/sound/bgm.ogg"
     this.music.loop = true;
     this.sounds = document.getElementById('sound-player');
-    this.sounds.sound = 0.1;
+    this.sounds.volume = 0.1;
     this.musicOn();
     this.musicControl = document.getElementById('music-control');
     this.soundControl = document.getElementById('sound-control');

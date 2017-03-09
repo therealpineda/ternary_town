@@ -17,7 +17,6 @@ class Board {
 
     this.grid = [];
     this.carts = [];
-    this.fruitStands = [];
 
     this.level = 0;
     this.levelBoard = document.getElementById('level');
@@ -80,18 +79,20 @@ class Board {
     this.pieceBoard.innerHTML = `<img src=\"${imageSrc}\">`
   }
 
-  hoverPiece(square) {
+  hoverPiece(coords) {
+    const square = this.getSquare(coords[0], coords[1]);
     square.hoverPiece(this.currentPieceVal);
   }
 
-  makeMove(clickedSq) {
+  makeMove(coords) {
+    const clickedSq = this.getSquare(coords[0], coords[1]);
     if (this.validMove(clickedSq)) {
       clickedSq.val = this.currentPieceVal;
       this.makeMatches(clickedSq);
       this.moveCarts();
       if (clickedSq.val === 10) {
         if (this.checkTrapped(clickedSq)) {
-          this.makeFruitStand(clickedSq);
+          this.makeFlower(clickedSq);
         } else {
           clickedSq.age = new Date();
           this.carts.push(clickedSq);
@@ -197,7 +198,7 @@ class Board {
         newCarts.push(destinationSq);
       } else {
         if (this.checkTrapped(cart, cart.col, cart.row)) {
-          this.makeFruitStand(cart);
+          this.makeFlower(cart);
         } else {
           newCarts.push(cart);
         }
@@ -234,7 +235,7 @@ class Board {
     return trapped;
   }
 
-  makeFruitStand(targetSq) {
+  makeFlower(targetSq) {
     targetSq.val = 11;
     targetSq.age = new Date();
     this.makeMatches(targetSq);
