@@ -41,7 +41,7 @@ getCoords(evt) {
 }
 ```
 
-The board also keeps track of the score and level, as well as a current piece that is randomly generated with influence by the current level.
+The board also keeps track of the score and level, as well as a current piece that is randomly generated with influence from the current level.
 
 ![alt text](docs/img/game-board.png "Ternary Town")
 

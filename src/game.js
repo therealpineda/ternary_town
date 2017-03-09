@@ -32,7 +32,8 @@ class TernaryTown {
 
   gameOver() {
     if (this.board.boardFull()) {
-      alert('Game Over!');
+      const alert = document.getElementById('game-over');
+      alert.className = "";
     }
   }
 
