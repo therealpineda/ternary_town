@@ -1,5 +1,5 @@
 /* RESET */
-html, body, header, h1, h2, h3, main, div, table, tr, td, p, ul, li, section, img {
+html, body, header, h1, h2, h3, main, div, table, tr, td, p, ul, li, section, img, a , a:active, a:visited {
   margin: 0px;
   border: 0px;
   padding: 0px;
@@ -82,7 +82,7 @@ tr:hover td {
 
 .sidebar {
   width: 100%;
-  padding: 20px 15px;
+  padding: 20px 15px 10px 15px;
   margin: 5px 0 5px 10px;
   border: 1px solid rgba(0, 0, 0, 0.28);
   outline: 1px dashed rgba(0, 0, 0, 0.28);
@@ -96,12 +96,31 @@ tr:hover td {
   padding-bottom: 8px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.28);
   font-size: 18px;
+  display: flex;
+  justify-content: space-between;
 }
 
 #added-score {
   margin-left: 5px;
   color: #2C6A96;
   font-weight: bold;
+}
+
+.audio-controls i {
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.audio-controls i:hover {
+  cursor: pointer;
+}
+
+.inactive-control {
+  color: rgba(154, 146, 122, 0.58);
+}
+
+#sound-control {
+  min-width: 20px;
 }
 
 .level-piece-board {
@@ -133,11 +152,36 @@ tr:hover td {
   margin-bottom: 4px;
 }
 
-/* ANIMATIONS */
-
-.hidden {
-  display: none;
+.contact-info {
+  margin-top: 70px;
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
 }
+
+.c-icon, .contact-icons a, .contact-icons a:active, .contact-icons a:visited {
+  margin-top: 3px;
+  font-size: 29px;
+  color: #000;
+  transition: color 0.2s;
+  letter-spacing: -0.3px;
+}
+
+.c-icon:hover {
+  font-size: 29px;
+  cursor: pointer;
+  color: #49799E;
+}
+
+.desk {
+  width: 120px;
+  height: 60px;
+}
+
+/* HEADER BACKGROUNG IMAGES */
 
 .sign {
   position: absolute;
@@ -194,6 +238,12 @@ tr:hover td {
   left: 190px;
   top: 42px;
   border-radius: 5px;
+}
+
+/* ANIMATIONS */
+
+.hidden {
+  display: none;
 }
 
 .balloon {
