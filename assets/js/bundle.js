@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -79,7 +79,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _board = __webpack_require__(3);
+var _board = __webpack_require__(2);
 
 var _board2 = _interopRequireDefault(_board);
 
@@ -104,28 +104,24 @@ var TernaryTown = function () {
       var self = this;
       this.htmlElement.addEventListener('mousemove', function (evt) {
         self.board.drawSquares();
-        var square = self.getSquare(evt);
-        self.board.hoverPiece(square);
+        var coords = self.getCoords(evt);
+        self.board.hoverPiece(coords);
       });
 
       this.htmlElement.addEventListener('click', function (evt) {
-        var square = self.getSquare(evt);
-        self.makeMove(square);
+        var coords = self.getCoords(evt);
+        self.board.makeMove(coords);
+        self.gameOver();
       });
     }
   }, {
-    key: 'getSquare',
-    value: function getSquare(evt) {
+    key: 'getCoords',
+    value: function getCoords(evt) {
       var mouseX = evt.pageX - this.htmlElement.offsetLeft;
       var mouseY = evt.pageY - this.htmlElement.offsetTop;
       var x = Math.floor(mouseX / 75.1);
       var y = Math.floor(mouseY / 75.1);
-      return this.board.getSquare(x, y);
-    }
-  }, {
-    key: 'makeMove',
-    value: function makeMove(square) {
-      this.board.makeMove(square);
+      return [x, y];
     }
   }, {
     key: 'gameOver',
@@ -158,96 +154,106 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Square = function () {
-  function Square(row, col) {
-    _classCallCheck(this, Square);
+var Audio = function () {
+  function Audio() {
+    _classCallCheck(this, Audio);
 
-    this.htmlElement = document.getElementById(row + '-' + col);
-    this.row = row;
-    this.col = col;
-    this.sqNumber = row * 6 + col;
-    this.val = '';
-    this.age = new Date();
+    this.music = document.getElementById('music-player');
+    this.music.src = "assets/sound/bgm.ogg";
+    this.music.loop = true;
+    this.sounds = document.getElementById('sound-player');
+    this.sounds.sound = 0.1;
+    this.musicOn();
+    this.musicControl = document.getElementById('music-control');
+    this.soundControl = document.getElementById('sound-control');
+    this.addMusicOffListener();
+    this.addSoundOffListener();
+    this.soundMuted = false;
   }
 
-  _createClass(Square, [{
-    key: 'drawSquare',
-    value: function drawSquare(val) {
-      var square = this.htmlElement;
-      if (!val) {
-        val = this.val;
-      }
-      var img = new Image();
-      img.src = Square.getImage(val);
-      square.innerHTML = '';
-      square.appendChild(img);
+  _createClass(Audio, [{
+    key: 'addMusicOffListener',
+    value: function addMusicOffListener() {
+      var self = this;
+      this.musicControl.addEventListener('click', function (evt) {
+        self.musicOff();
+        self.musicControl.className = "fa fa-music inactive-control";
+        self.addMusicOnListener();
+      });
     }
   }, {
-    key: 'hoverPiece',
-    value: function hoverPiece(currentPieceVal) {
-      if (!this.val) {
-        this.drawSquare(currentPieceVal);
-        this.htmlElement.addEventListener('mouseleave', this.drawSquare.bind(this));
+    key: 'addMusicOnListener',
+    value: function addMusicOnListener() {
+      var self = this;
+      this.musicControl.addEventListener('click', function (evt) {
+        self.musicOn();
+        self.musicControl.className = "fa fa-music active-control";
+        self.addMusicOffListener();
+      });
+    }
+  }, {
+    key: 'addSoundOffListener',
+    value: function addSoundOffListener() {
+      var self = this;
+      this.soundControl.addEventListener('click', function (evt) {
+        self.soundMuted = true;
+        self.soundControl.className = "fa fa-volume-off inactive-control";
+        self.addSoundOnListener();
+      });
+    }
+  }, {
+    key: 'addSoundOnListener',
+    value: function addSoundOnListener() {
+      var self = this;
+      this.soundControl.addEventListener('click', function (evt) {
+        self.soundMuted = false;
+        self.soundControl.className = "fa fa-volume-up active-control";
+        self.addSoundOffListener();
+      });
+    }
+  }, {
+    key: 'musicOn',
+    value: function musicOn() {
+      this.music.play();
+    }
+  }, {
+    key: 'musicOff',
+    value: function musicOff() {
+      this.music.pause();
+    }
+  }, {
+    key: 'build',
+    value: function build() {
+      if (!this.soundMuted) {
+        this.sounds.src = "assets/sound/build.wav";
+        this.sounds.play();
       }
     }
-  }], [{
-    key: 'getImage',
-    value: function getImage(pieceVal) {
-      switch (pieceVal) {
-        case 1:
-          return 'assets/img/icons/1.png';
-        case 2:
-          return 'assets/img/icons/2.png';
-        case 3:
-          return 'assets/img/icons/3.png';
-        case 4:
-          return 'assets/img/icons/4.png';
-        case 5:
-          return 'assets/img/icons/5.png';
-        case 6:
-          return 'assets/img/icons/6.png';
-        case 7:
-          return 'assets/img/icons/7.png';
-        case 8:
-          return 'assets/img/icons/8.png';
-        case 9:
-          return 'assets/img/icons/9.png';
-        case 10:
-          return 'assets/img/icons/e1.png';
-        case 11:
-          return 'assets/img/icons/e2.png';
-        case 12:
-          return 'assets/img/icons/e3.png';
-        default:
-          return 'assets/img/icons/blank.png';
+  }, {
+    key: 'invalid',
+    value: function invalid() {
+      if (!this.soundMuted) {
+        this.sounds.src = "assets/sound/invalid.wav";
+        this.sounds.play();
+      }
+    }
+  }, {
+    key: 'cheer',
+    value: function cheer() {
+      if (!this.soundMuted) {
+        this.sounds.src = "assets/sound/cheer.wav";
+        this.sounds.play();
       }
     }
   }]);
 
-  return Square;
+  return Audio;
 }();
 
-exports.default = Square;
+exports.default = Audio;
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _game = __webpack_require__(0);
-
-var _game2 = _interopRequireDefault(_game);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-document.addEventListener('DOMContentLoaded', function () {
-  new _game2.default();
-});
-
-/***/ }),
-/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -259,11 +265,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _square = __webpack_require__(1);
+var _square = __webpack_require__(3);
 
 var _square2 = _interopRequireDefault(_square);
 
-var _audio = __webpack_require__(4);
+var _audio = __webpack_require__(1);
 
 var _audio2 = _interopRequireDefault(_audio);
 
@@ -283,7 +289,6 @@ var Board = function () {
 
     this.grid = [];
     this.carts = [];
-    this.fruitStands = [];
 
     this.level = 0;
     this.levelBoard = document.getElementById('level');
@@ -353,19 +358,21 @@ var Board = function () {
     }
   }, {
     key: 'hoverPiece',
-    value: function hoverPiece(square) {
+    value: function hoverPiece(coords) {
+      var square = this.getSquare(coords[0], coords[1]);
       square.hoverPiece(this.currentPieceVal);
     }
   }, {
     key: 'makeMove',
-    value: function makeMove(clickedSq) {
+    value: function makeMove(coords) {
+      var clickedSq = this.getSquare(coords[0], coords[1]);
       if (this.validMove(clickedSq)) {
         clickedSq.val = this.currentPieceVal;
         this.makeMatches(clickedSq);
         this.moveCarts();
         if (clickedSq.val === 10) {
           if (this.checkTrapped(clickedSq)) {
-            this.makeFruitStand(clickedSq);
+            this.makeFlower(clickedSq);
           } else {
             clickedSq.age = new Date();
             this.carts.push(clickedSq);
@@ -486,7 +493,7 @@ var Board = function () {
           newCarts.push(destinationSq);
         } else {
           if (_this4.checkTrapped(cart, cart.col, cart.row)) {
-            _this4.makeFruitStand(cart);
+            _this4.makeFlower(cart);
           } else {
             newCarts.push(cart);
           }
@@ -526,8 +533,8 @@ var Board = function () {
       return trapped;
     }
   }, {
-    key: 'makeFruitStand',
-    value: function makeFruitStand(targetSq) {
+    key: 'makeFlower',
+    value: function makeFlower(targetSq) {
       targetSq.val = 11;
       targetSq.age = new Date();
       this.makeMatches(targetSq);
@@ -551,7 +558,7 @@ var Board = function () {
 exports.default = Board;
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -565,103 +572,93 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Audio = function () {
-  function Audio() {
-    _classCallCheck(this, Audio);
+var Square = function () {
+  function Square(row, col) {
+    _classCallCheck(this, Square);
 
-    this.music = document.getElementById('music-player');
-    this.music.src = "assets/sound/bgm.ogg";
-    this.music.loop = true;
-    this.sounds = document.getElementById('sound-player');
-    this.sounds.sound = 0.1;
-    this.musicOn();
-    this.musicControl = document.getElementById('music-control');
-    this.soundControl = document.getElementById('sound-control');
-    this.addMusicOffListener();
-    this.addSoundOffListener();
-    this.soundMuted = false;
+    this.htmlElement = document.getElementById(row + '-' + col);
+    this.row = row;
+    this.col = col;
+    this.sqNumber = row * 6 + col;
+    this.val = '';
+    this.age = new Date();
   }
 
-  _createClass(Audio, [{
-    key: 'addMusicOffListener',
-    value: function addMusicOffListener() {
-      var self = this;
-      this.musicControl.addEventListener('click', function (evt) {
-        self.musicOff();
-        self.musicControl.className = "fa fa-music inactive-control";
-        self.addMusicOnListener();
-      });
+  _createClass(Square, [{
+    key: 'drawSquare',
+    value: function drawSquare(val) {
+      var square = this.htmlElement;
+      if (!val) {
+        val = this.val;
+      }
+      var img = new Image();
+      img.src = Square.getImage(val);
+      square.innerHTML = '';
+      square.appendChild(img);
     }
   }, {
-    key: 'addMusicOnListener',
-    value: function addMusicOnListener() {
-      var self = this;
-      this.musicControl.addEventListener('click', function (evt) {
-        self.musicOn();
-        self.musicControl.className = "fa fa-music active-control";
-        self.addMusicOffListener();
-      });
-    }
-  }, {
-    key: 'addSoundOffListener',
-    value: function addSoundOffListener() {
-      var self = this;
-      this.soundControl.addEventListener('click', function (evt) {
-        self.soundMuted = true;
-        self.soundControl.className = "fa fa-volume-off inactive-control";
-        self.addSoundOnListener();
-      });
-    }
-  }, {
-    key: 'addSoundOnListener',
-    value: function addSoundOnListener() {
-      var self = this;
-      this.soundControl.addEventListener('click', function (evt) {
-        self.soundMuted = false;
-        self.soundControl.className = "fa fa-volume-up active-control";
-        self.addSoundOffListener();
-      });
-    }
-  }, {
-    key: 'musicOn',
-    value: function musicOn() {
-      this.music.play();
-    }
-  }, {
-    key: 'musicOff',
-    value: function musicOff() {
-      this.music.pause();
-    }
-  }, {
-    key: 'build',
-    value: function build() {
-      if (!this.soundMuted) {
-        this.sounds.src = "assets/sound/build.wav";
-        this.sounds.play();
+    key: 'hoverPiece',
+    value: function hoverPiece(currentPieceVal) {
+      if (!this.val) {
+        this.drawSquare(currentPieceVal);
+        this.htmlElement.addEventListener('mouseleave', this.drawSquare.bind(this));
       }
     }
-  }, {
-    key: 'invalid',
-    value: function invalid() {
-      if (!this.soundMuted) {
-        this.sounds.src = "assets/sound/invalid.wav";
-        this.sounds.play();
-      }
-    }
-  }, {
-    key: 'cheer',
-    value: function cheer() {
-      if (!this.soundMuted) {
-        this.sounds.src = "assets/sound/cheer.wav";
-        this.sounds.play();
+  }], [{
+    key: 'getImage',
+    value: function getImage(pieceVal) {
+      switch (pieceVal) {
+        case 1:
+          return 'assets/img/icons/1.png';
+        case 2:
+          return 'assets/img/icons/2.png';
+        case 3:
+          return 'assets/img/icons/3.png';
+        case 4:
+          return 'assets/img/icons/4.png';
+        case 5:
+          return 'assets/img/icons/5.png';
+        case 6:
+          return 'assets/img/icons/6.png';
+        case 7:
+          return 'assets/img/icons/7.png';
+        case 8:
+          return 'assets/img/icons/8.png';
+        case 9:
+          return 'assets/img/icons/9.png';
+        case 10:
+          return 'assets/img/icons/e1.png';
+        case 11:
+          return 'assets/img/icons/e2.png';
+        case 12:
+          return 'assets/img/icons/e3.png';
+        default:
+          return 'assets/img/icons/blank.png';
       }
     }
   }]);
 
-  return Audio;
+  return Square;
 }();
 
-exports.default = Audio;
+exports.default = Square;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _game = __webpack_require__(0);
+
+var _game2 = _interopRequireDefault(_game);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+document.addEventListener('DOMContentLoaded', function () {
+  new _game2.default();
+});
 
 /***/ })
 /******/ ]);
