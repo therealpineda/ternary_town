@@ -310,11 +310,6 @@ tr:hover td {
     100% {left:355px; top:-15px;}
 }
 
-@keyframes drive {
-    0% {left:60px; top:40px;}
-    100%   {left:30px; top:40px;}
-}
-
 @-webkit-keyframes fly {
     0%   {left:350px; top:-15px;}
     25%  {left:345px; top:-10px;}
@@ -323,8 +318,14 @@ tr:hover td {
     100% {left:350px; top:-15px;}
 }
 
-.drive {
+@keyframes drive {
+  0% {left:60px; top:40px;}
+  100%   {left:30px; top:40px;}
+}
 
+@-webkit-keyframes drive {
+  0% {left:60px; top:40px;}
+  100%   {left:30px; top:40px;}
 }
 
 .slideDown{
@@ -354,4 +355,34 @@ tr:hover td {
 	50%{transform: translateY(-4%);}
 	70%{transform: translateY(2%);}
 	100% {transform: translateY(0%);}
+}
+
+/* MEDIA QUERY */
+
+@media (max-width: 800px) {
+
+  body {
+    width: 500px;
+  }
+
+  .game {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .sidebar {
+    margin: 5px auto !important;
+    width: 60% !important;
+  }
+
+  .level-piece-board {
+    margin-top: 3px;
+    margin-bottom: 0px;
+    flex-direction: row !important;
+    justify-content: space-between;
+  }
+
+  .contact-info {
+    margin-top: 15px;
+  }
 }
