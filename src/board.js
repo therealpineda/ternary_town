@@ -105,7 +105,7 @@ class Board {
 
   validMove(clickedSq) {
     if (clickedSq.val) {
-      this.audio.invalid();
+      this.audio.playSound('invalid');
       return false;
     }
     return true;
@@ -154,7 +154,7 @@ class Board {
       }
     } else {
       addedScore += (targetSq.val * 10);
-      this.audio.build();
+      this.audio.playSound('build');
     }
     this.updateScore(addedScore);
   }
@@ -180,9 +180,9 @@ class Board {
       });
     }
     if (clickedSq.val > 6 && clickedSq.val < 10) {
-      this.audio.cheer();
+      this.audio.playSound('cheer');
     } else {
-      this.audio.build();
+      this.audio.playSound('build');
     }
   }
 
