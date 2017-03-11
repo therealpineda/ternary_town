@@ -321,8 +321,8 @@ tr:hover td {
 
 .wiggle {
   animation: wiggle .8s infinite;
-  background-image: url('../img/icons/dusty.gif');
-  position: relative;
+  /*background-image: url('../img/icons/dusty.gif');*/
+  /*position: relative;*/
 }
 
 @keyframes wiggle {
@@ -394,17 +394,17 @@ tr:hover td {
 
   .sidebar {
     margin: 5px auto !important;
-    width: 60% !important;
+    width: 88% !important;
   }
 
   .level-piece-board {
     margin-top: 3px;
     margin-bottom: 0px;
     flex-direction: row !important;
-    justify-content: space-between;
+    justify-content: space-around;
   }
 
   .contact-info {
-    margin-top: 15px;
+    margin-top: -40px;
   }
 }
