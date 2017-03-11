@@ -310,11 +310,6 @@ tr:hover td {
     100% {left:355px; top:-15px;}
 }
 
-@keyframes drive {
-    0% {left:60px; top:40px;}
-    100%   {left:30px; top:40px;}
-}
-
 @-webkit-keyframes fly {
     0%   {left:350px; top:-15px;}
     25%  {left:345px; top:-10px;}
@@ -323,8 +318,36 @@ tr:hover td {
     100% {left:350px; top:-15px;}
 }
 
-.drive {
 
+.wiggle {
+  animation: wiggle .8s infinite;
+  /*background-image: url('../img/icons/dusty.gif');*/
+  /*position: relative;*/
+}
+
+@keyframes wiggle {
+    0% { transform: rotate(0deg); }
+   10% { transform: rotate(-3deg); }
+   20% { transform: rotate(0deg); }
+   30% { transform: rotate(4deg); }
+   40% { transform: rotate(0deg); }
+   50% { transform: rotate(0deg); }
+   60% { transform: rotate(-3deg); }
+   70% { transform: rotate(0deg); }
+   80% { transform: rotate(2deg); }
+   90% { transform: rotate(0deg); }
+  100% { transform: rotate(0deg); }
+}
+
+
+@keyframes drive {
+  0% {left:60px; top:40px;}
+  100%   {left:30px; top:40px;}
+}
+
+@-webkit-keyframes drive {
+  0% {left:60px; top:40px;}
+  100%   {left:30px; top:40px;}
 }
 
 .slideDown{
@@ -354,4 +377,34 @@ tr:hover td {
 	50%{transform: translateY(-4%);}
 	70%{transform: translateY(2%);}
 	100% {transform: translateY(0%);}
+}
+
+/* MEDIA QUERY */
+
+@media (max-width: 800px) {
+
+  body {
+    width: 500px;
+  }
+
+  .game {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .sidebar {
+    margin: 5px auto !important;
+    width: 88% !important;
+  }
+
+  .level-piece-board {
+    margin-top: 3px;
+    margin-bottom: 0px;
+    flex-direction: row !important;
+    justify-content: space-around;
+  }
+
+  .contact-info {
+    margin-top: -40px;
+  }
 }

@@ -165,86 +165,68 @@ var Audio = function () {
     this.sounds = document.getElementById('sound-player');
     this.sounds.volume = 0.1;
     this.musicOn();
-    this.musicControl = document.getElementById('music-control');
-    this.soundControl = document.getElementById('sound-control');
-    this.addMusicOffListener();
-    this.addSoundOffListener();
-    this.soundMuted = false;
+    this.soundOn();
   }
 
   _createClass(Audio, [{
-    key: 'addMusicOffListener',
-    value: function addMusicOffListener() {
-      var self = this;
-      this.musicControl.addEventListener('click', function (evt) {
-        self.musicOff();
-        self.musicControl.className = "fa fa-music inactive-control";
-        self.addMusicOnListener();
-      });
-    }
-  }, {
-    key: 'addMusicOnListener',
-    value: function addMusicOnListener() {
-      var self = this;
-      this.musicControl.addEventListener('click', function (evt) {
-        self.musicOn();
-        self.musicControl.className = "fa fa-music active-control";
-        self.addMusicOffListener();
-      });
-    }
-  }, {
-    key: 'addSoundOffListener',
-    value: function addSoundOffListener() {
-      var self = this;
-      this.soundControl.addEventListener('click', function (evt) {
-        self.soundMuted = true;
-        self.soundControl.className = "fa fa-volume-off inactive-control";
-        self.addSoundOnListener();
-      });
-    }
-  }, {
-    key: 'addSoundOnListener',
-    value: function addSoundOnListener() {
-      var self = this;
-      this.soundControl.addEventListener('click', function (evt) {
-        self.soundMuted = false;
-        self.soundControl.className = "fa fa-volume-up active-control";
-        self.addSoundOffListener();
-      });
-    }
-  }, {
     key: 'musicOn',
     value: function musicOn() {
+      this.musicControl = document.getElementById('music-control');
       this.music.play();
+      this.musicControl.className = "fa fa-music active-control";
+      this.addMusicOffListener();
     }
   }, {
     key: 'musicOff',
     value: function musicOff() {
+      this.musicControl = document.getElementById('music-control');
       this.music.pause();
+      this.musicControl.className = "fa fa-music inactive-control";
+      this.addMusicOnListener();
     }
   }, {
-    key: 'build',
-    value: function build() {
+    key: 'soundOn',
+    value: function soundOn() {
+      this.soundControl = document.getElementById('sound-control');
+      this.soundMuted = false;
+      this.soundControl.className = "fa fa-volume-up active-control";
+      this.addSoundOffListener();
+    }
+  }, {
+    key: 'soundOff',
+    value: function soundOff() {
+      this.soundControl = document.getElementById('sound-control');
+      this.soundMuted = true;
+      this.soundControl.className = "fa fa-volume-off inactive-control";
+      this.addSoundOnListener();
+    }
+  }, {
+    key: 'playSound',
+    value: function playSound(sound) {
       if (!this.soundMuted) {
-        this.sounds.src = "assets/sound/build.wav";
+        this.sounds.src = 'assets/sound/' + sound + '.wav';
         this.sounds.play();
       }
     }
   }, {
-    key: 'invalid',
-    value: function invalid() {
-      if (!this.soundMuted) {
-        this.sounds.src = "assets/sound/invalid.wav";
-        this.sounds.play();
-      }
+    key: 'addMusicOffListener',
+    value: function addMusicOffListener() {
+      this.musicControl.addEventListener('click', this.musicOff.bind(this));
     }
   }, {
-    key: 'cheer',
-    value: function cheer() {
-      if (!this.soundMuted) {
-        this.sounds.src = "assets/sound/cheer.wav";
-        this.sounds.play();
-      }
+    key: 'addMusicOnListener',
+    value: function addMusicOnListener() {
+      this.musicControl.addEventListener('click', this.musicOn.bind(this));
+    }
+  }, {
+    key: 'addSoundOffListener',
+    value: function addSoundOffListener() {
+      this.soundControl.addEventListener('click', this.soundOff.bind(this));
+    }
+  }, {
+    key: 'addSoundOnListener',
+    value: function addSoundOnListener() {
+      this.soundControl.addEventListener('click', this.soundOn.bind(this));
     }
   }]);
 
@@ -326,6 +308,15 @@ var Board = function () {
       });
     }
   }, {
+    key: 'clearWiggles',
+    value: function clearWiggles() {
+      this.grid.forEach(function (row) {
+        row.forEach(function (sq) {
+          sq.htmlElement.className = "square";
+        });
+      });
+    }
+  }, {
     key: 'getSquare',
     value: function getSquare(x, y) {
       return this.grid[y][x];
@@ -362,6 +353,18 @@ var Board = function () {
     value: function hoverPiece(coords) {
       var square = this.getSquare(coords[0], coords[1]);
       square.hoverPiece(this.currentPieceVal);
+      this.clearWiggles();
+      var matches = this.getMatches(square, this.currentPieceVal);
+      if (matches.length >= 2 && !square.val) {
+        this.wiggleMatches(matches);
+      }
+    }
+  }, {
+    key: 'wiggleMatches',
+    value: function wiggleMatches(matches) {
+      matches.forEach(function (match) {
+        match.htmlElement.className = "square wiggle";
+      });
     }
   }, {
     key: 'makeMove',
@@ -375,19 +378,19 @@ var Board = function () {
           if (this.checkTrapped(clickedSq)) {
             this.makeFlower(clickedSq);
           } else {
-            clickedSq.age = new Date();
             this.carts.push(clickedSq);
           }
         }
         this.nextPiece();
       }
+      this.clearWiggles();
       this.drawSquares();
     }
   }, {
     key: 'validMove',
     value: function validMove(clickedSq) {
       if (clickedSq.val) {
-        this.audio.invalid();
+        this.audio.playSound('invalid');
         return false;
       }
       return true;
@@ -409,12 +412,13 @@ var Board = function () {
       return neighbors;
     }
   }, {
-    key: 'findMatches',
-    value: function findMatches(targetSq) {
+    key: 'getMatches',
+    value: function getMatches(targetSq, matchVal) {
       var _this2 = this;
 
-      var matchVal = targetSq.val;
-
+      if (!matchVal) {
+        matchVal = targetSq.val;
+      }
       var matches = this.getNeighbors(targetSq).filter(function (neigh) {
         return neigh.val === matchVal && matchVal !== 10;
       });
@@ -434,16 +438,16 @@ var Board = function () {
     key: 'makeMatches',
     value: function makeMatches(targetSq) {
       var addedScore = 0;
-      var matches = this.findMatches(targetSq);
+      var matches = this.getMatches(targetSq);
       if (matches.length >= 2) {
         while (matches.length >= 2) {
           this.renderMatch(targetSq, matches);
           addedScore += (targetSq.val - 1) * 100 * (matches.length + 1);
-          matches = this.findMatches(targetSq);
+          matches = this.getMatches(targetSq);
         }
       } else {
         addedScore += targetSq.val * 10;
-        this.audio.build();
+        this.audio.playSound('build');
       }
       this.updateScore(addedScore);
     }
@@ -473,9 +477,9 @@ var Board = function () {
         });
       }
       if (clickedSq.val > 6 && clickedSq.val < 10) {
-        this.audio.cheer();
+        this.audio.playSound('cheer');
       } else {
-        this.audio.build();
+        this.audio.playSound('build');
       }
     }
   }, {
@@ -537,7 +541,6 @@ var Board = function () {
     key: 'makeFlower',
     value: function makeFlower(targetSq) {
       targetSq.val = 11;
-      targetSq.age = new Date();
       this.makeMatches(targetSq);
     }
   }, {

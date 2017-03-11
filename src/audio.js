@@ -6,76 +6,58 @@ class Audio {
     this.sounds = document.getElementById('sound-player');
     this.sounds.volume = 0.1;
     this.musicOn();
-    this.musicControl = document.getElementById('music-control');
-    this.soundControl = document.getElementById('sound-control');
-    this.addMusicOffListener();
-    this.addSoundOffListener();
-    this.soundMuted = false;
-  }
-
-  addMusicOffListener() {
-    const self = this;
-    this.musicControl.addEventListener('click', function(evt) {
-      self.musicOff();
-      self.musicControl.className = "fa fa-music inactive-control";
-      self.addMusicOnListener();
-    });
-  }
-
-  addMusicOnListener() {
-    const self = this;
-    this.musicControl.addEventListener('click', function(evt) {
-      self.musicOn();
-      self.musicControl.className = "fa fa-music active-control";
-      self.addMusicOffListener();
-    });
-  }
-
-  addSoundOffListener() {
-    const self = this;
-    this.soundControl.addEventListener('click', function(evt) {
-      self.soundMuted = true;
-      self.soundControl.className = "fa fa-volume-off inactive-control";
-      self.addSoundOnListener();
-    });
-  }
-
-  addSoundOnListener() {
-    const self = this;
-    this.soundControl.addEventListener('click', function(evt) {
-      self.soundMuted = false;
-      self.soundControl.className = "fa fa-volume-up active-control";
-      self.addSoundOffListener();
-    });
+    this.soundOn();
   }
 
   musicOn() {
+    this.musicControl = document.getElementById('music-control');
     this.music.play();
+    this.musicControl.className = "fa fa-music active-control";
+    this.addMusicOffListener();
   }
 
   musicOff() {
+    this.musicControl = document.getElementById('music-control');
     this.music.pause();
+    this.musicControl.className = "fa fa-music inactive-control";
+    this.addMusicOnListener();
   }
 
-  build() {
+  soundOn() {
+    this.soundControl = document.getElementById('sound-control');
+    this.soundMuted = false;
+    this.soundControl.className = "fa fa-volume-up active-control";
+    this.addSoundOffListener();
+  }
+
+  soundOff() {
+    this.soundControl = document.getElementById('sound-control');
+    this.soundMuted = true;
+    this.soundControl.className = "fa fa-volume-off inactive-control";
+    this.addSoundOnListener();
+  }
+
+  playSound(sound) {
     if (!this.soundMuted) {
-      this.sounds.src = "assets/sound/build.wav";
+      this.sounds.src = `assets/sound/${sound}.wav`;
       this.sounds.play();
     }
   }
 
-  invalid() {
-    if (!this.soundMuted) {
-      this.sounds.src = "assets/sound/invalid.wav";
-      this.sounds.play();
-    }
+  addMusicOffListener() {
+    this.musicControl.addEventListener('click', this.musicOff.bind(this));
   }
 
-  cheer() {
-    if (!this.soundMuted) {
-      this.sounds.src = "assets/sound/cheer.wav";
-      this.sounds.play();
-    }
+  addMusicOnListener() {
+    this.musicControl.addEventListener('click', this.musicOn.bind(this));
+  }
+
+  addSoundOffListener() {
+    this.soundControl.addEventListener('click', this.soundOff.bind(this));
+  }
+
+  addSoundOnListener() {
+    this.soundControl.addEventListener('click', this.soundOn.bind(this));
   }
 }
 

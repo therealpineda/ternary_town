@@ -50,6 +50,14 @@ class Board {
     });
   }
 
+  clearWiggles() {
+    this.grid.forEach((row) => {
+      row.forEach((sq) => {
+        sq.htmlElement.className = "square";
+      });
+    });
+  }
+
   getSquare(x,y) {
     return this.grid[y][x];
   }
@@ -82,6 +90,17 @@ class Board {
   hoverPiece(coords) {
     const square = this.getSquare(coords[0], coords[1]);
     square.hoverPiece(this.currentPieceVal);
+    this.clearWiggles();
+    const matches = this.getMatches(square, this.currentPieceVal);
+    if (matches.length >= 2 && !square.val) {
+      this.wiggleMatches(matches);
+    }
+  }
+
+  wiggleMatches(matches) {
+    matches.forEach((match) => {
+      match.htmlElement.className = "square wiggle";
+    });
   }
 
   makeMove(coords) {
@@ -94,18 +113,18 @@ class Board {
         if (this.checkTrapped(clickedSq)) {
           this.makeFlower(clickedSq);
         } else {
-          clickedSq.age = new Date();
           this.carts.push(clickedSq);
         }
       }
       this.nextPiece();
     }
+    this.clearWiggles();
     this.drawSquares();
   }
 
   validMove(clickedSq) {
     if (clickedSq.val) {
-      this.audio.invalid();
+      this.audio.playSound('invalid');
       return false;
     }
     return true;
@@ -124,9 +143,10 @@ class Board {
     return neighbors;
   }
 
-  findMatches(targetSq) {
-    const matchVal = targetSq.val;
-
+  getMatches(targetSq, matchVal) {
+    if (!matchVal) {
+      matchVal = targetSq.val;
+    }
     const matches = this.getNeighbors(targetSq).filter((neigh) => {
       return (neigh.val === matchVal && matchVal !== 10)
     });
@@ -145,16 +165,16 @@ class Board {
 
   makeMatches(targetSq) {
     let addedScore = 0;
-    let matches = this.findMatches(targetSq);
+    let matches = this.getMatches(targetSq);
     if (matches.length >= 2) {
       while (matches.length >= 2) {
         this.renderMatch(targetSq, matches);
         addedScore += ((targetSq.val - 1) * 100 * (matches.length + 1));
-        matches = this.findMatches(targetSq);
+        matches = this.getMatches(targetSq);
       }
     } else {
       addedScore += (targetSq.val * 10);
-      this.audio.build();
+      this.audio.playSound('build');
     }
     this.updateScore(addedScore);
   }
@@ -180,9 +200,9 @@ class Board {
       });
     }
     if (clickedSq.val > 6 && clickedSq.val < 10) {
-      this.audio.cheer();
+      this.audio.playSound('cheer');
     } else {
-      this.audio.build();
+      this.audio.playSound('build');
     }
   }
 
@@ -237,7 +257,6 @@ class Board {
 
   makeFlower(targetSq) {
     targetSq.val = 11;
-    targetSq.age = new Date();
     this.makeMatches(targetSq);
   }
 
