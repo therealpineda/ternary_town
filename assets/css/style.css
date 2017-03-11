@@ -321,7 +321,7 @@ tr:hover td {
 
 .wiggle {
   animation: wiggle .8s infinite;
-  /*background-image: url('../img/icons/dusty.gif');*/
+  background-image: url('../img/icons/dusty.gif');
   position: relative;
 }
 
