@@ -318,6 +318,28 @@ tr:hover td {
     100% {left:350px; top:-15px;}
 }
 
+
+.wiggle {
+  animation: wiggle .8s infinite;
+  /*background-image: url('../img/icons/dusty.gif');*/
+  position: relative;
+}
+
+@keyframes wiggle {
+    0% { transform: rotate(0deg); }
+   10% { transform: rotate(-3deg); }
+   20% { transform: rotate(0deg); }
+   30% { transform: rotate(4deg); }
+   40% { transform: rotate(0deg); }
+   50% { transform: rotate(0deg); }
+   60% { transform: rotate(-3deg); }
+   70% { transform: rotate(0deg); }
+   80% { transform: rotate(2deg); }
+   90% { transform: rotate(0deg); }
+  100% { transform: rotate(0deg); }
+}
+
+
 @keyframes drive {
   0% {left:60px; top:40px;}
   100%   {left:30px; top:40px;}

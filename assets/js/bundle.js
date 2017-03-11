@@ -308,6 +308,15 @@ var Board = function () {
       });
     }
   }, {
+    key: 'clearWiggles',
+    value: function clearWiggles() {
+      this.grid.forEach(function (row) {
+        row.forEach(function (sq) {
+          sq.htmlElement.className = "square";
+        });
+      });
+    }
+  }, {
     key: 'getSquare',
     value: function getSquare(x, y) {
       return this.grid[y][x];
@@ -344,6 +353,18 @@ var Board = function () {
     value: function hoverPiece(coords) {
       var square = this.getSquare(coords[0], coords[1]);
       square.hoverPiece(this.currentPieceVal);
+      this.clearWiggles();
+      var matches = this.getMatches(square, this.currentPieceVal);
+      if (matches.length >= 2 && !square.val) {
+        this.wiggleMatches(matches);
+      }
+    }
+  }, {
+    key: 'wiggleMatches',
+    value: function wiggleMatches(matches) {
+      matches.forEach(function (match) {
+        match.htmlElement.className = "square wiggle";
+      });
     }
   }, {
     key: 'makeMove',
@@ -357,12 +378,12 @@ var Board = function () {
           if (this.checkTrapped(clickedSq)) {
             this.makeFlower(clickedSq);
           } else {
-            clickedSq.age = new Date();
             this.carts.push(clickedSq);
           }
         }
         this.nextPiece();
       }
+      this.clearWiggles();
       this.drawSquares();
     }
   }, {
@@ -391,12 +412,13 @@ var Board = function () {
       return neighbors;
     }
   }, {
-    key: 'findMatches',
-    value: function findMatches(targetSq) {
+    key: 'getMatches',
+    value: function getMatches(targetSq, matchVal) {
       var _this2 = this;
 
-      var matchVal = targetSq.val;
-
+      if (!matchVal) {
+        matchVal = targetSq.val;
+      }
       var matches = this.getNeighbors(targetSq).filter(function (neigh) {
         return neigh.val === matchVal && matchVal !== 10;
       });
@@ -416,12 +438,12 @@ var Board = function () {
     key: 'makeMatches',
     value: function makeMatches(targetSq) {
       var addedScore = 0;
-      var matches = this.findMatches(targetSq);
+      var matches = this.getMatches(targetSq);
       if (matches.length >= 2) {
         while (matches.length >= 2) {
           this.renderMatch(targetSq, matches);
           addedScore += (targetSq.val - 1) * 100 * (matches.length + 1);
-          matches = this.findMatches(targetSq);
+          matches = this.getMatches(targetSq);
         }
       } else {
         addedScore += targetSq.val * 10;
@@ -519,7 +541,6 @@ var Board = function () {
     key: 'makeFlower',
     value: function makeFlower(targetSq) {
       targetSq.val = 11;
-      targetSq.age = new Date();
       this.makeMatches(targetSq);
     }
   }, {
