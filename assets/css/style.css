@@ -65,7 +65,7 @@ header h1 {
 }
 
 tr:hover td {
-  /*background-color: rgba(154, 146, 122, 0.18);*/
+  background-color: rgba(154, 146, 122, 0.18);
 }
 
 .square {

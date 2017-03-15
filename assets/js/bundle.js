@@ -282,6 +282,9 @@ var Board = function () {
 
     this.createBoard(numStartingPieces);
     this.nextPiece();
+
+    this.drawGridHighlights.bind(this);
+    this.drawWiggles.bind(this);
   }
 
   _createClass(Board, [{
@@ -339,11 +342,11 @@ var Board = function () {
     value: function nextPiece() {
       var randomVal = 10;
       var notEnemy = Math.random();
-      // % chance piece will be an enemy... will evenutally increase w level as well
       if (notEnemy < .93) {
         var i = this.level + 1;
-        randomVal = Math.ceil(Math.random() * i * Math.random());
+        randomVal = Math.ceil(Math.random() ** 2 * i);
       }
+      if (randomVal > 10) randomVal = 1;
       this.currentPieceVal = randomVal;
       var imageSrc = _square2.default.getImage(this.currentPieceVal);
       this.pieceBoard.innerHTML = '<img src="' + imageSrc + '">';
@@ -351,20 +354,35 @@ var Board = function () {
   }, {
     key: 'hoverPiece',
     value: function hoverPiece(coords) {
-      var square = this.getSquare(coords[0], coords[1]);
-      square.hoverPiece(this.currentPieceVal);
       this.clearWiggles();
-      var matches = this.getMatches(square, this.currentPieceVal);
-      if (matches.length >= 2 && !square.val) {
-        this.wiggleMatches(matches);
+      var square = this.getSquare(coords[0], coords[1]);
+      if (square.val === '') {
+        square.hoverPiece(this.currentPieceVal);
+        this.drawGridHighlights(coords);
+        this.drawWiggles(square);
       }
     }
   }, {
-    key: 'wiggleMatches',
-    value: function wiggleMatches(matches) {
-      matches.forEach(function (match) {
-        match.htmlElement.className = "square wiggle";
-      });
+    key: 'drawGridHighlights',
+    value: function drawGridHighlights(coords) {
+      for (var i = 0; i < 6; i++) {
+        var x = coords[0];
+        var y = coords[1];
+        var hovRowSquare = this.getSquare(x, i);
+        hovRowSquare.hoveredRowColumn();
+        var hovColSquare = this.getSquare(i, y);
+        hovColSquare.hoveredRowColumn();
+      }
+    }
+  }, {
+    key: 'drawWiggles',
+    value: function drawWiggles(square) {
+      var matches = this.getMatches(square, this.currentPieceVal);
+      if (matches.length >= 2 && !square.val) {
+        matches.concat(square).forEach(function (match) {
+          match.htmlElement.className = "square wiggle";
+        });
+      }
     }
   }, {
     key: 'makeMove',
@@ -598,6 +616,8 @@ var Square = function () {
       var img = new Image();
       img.src = Square.getImage(val);
       square.innerHTML = '';
+      square.style.backgroundColor = "transparent";
+      square.className = "square";
       square.appendChild(img);
     }
   }, {
@@ -607,6 +627,12 @@ var Square = function () {
         this.drawSquare(currentPieceVal);
         this.htmlElement.addEventListener('mouseleave', this.drawSquare.bind(this));
       }
+    }
+  }, {
+    key: 'hoveredRowColumn',
+    value: function hoveredRowColumn() {
+      this.htmlElement.style.backgroundColor = "rgba(154, 146, 122, 0.09)";
+      this.htmlElement.addEventListener('mouseleave', this.drawSquare.bind(this));
     }
   }], [{
     key: 'getImage',
