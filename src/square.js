@@ -16,6 +16,8 @@ class Square {
     const img = new Image();
     img.src = Square.getImage(val);
     square.innerHTML = '';
+    square.style.backgroundColor = "transparent";
+    square.className = "square";
     square.appendChild(img);
   }
 
@@ -25,6 +27,11 @@ class Square {
       this.htmlElement.addEventListener('mouseleave', this.drawSquare.bind(this));
     }
   }
+
+  hoveredRowColumn() {
+    this.htmlElement.style.backgroundColor = "rgba(154, 146, 122, 0.09)";
+    this.htmlElement.addEventListener('mouseleave', this.drawSquare.bind(this));
+  };
 
   static getImage(pieceVal) {
     switch (pieceVal) {

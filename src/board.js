@@ -9,7 +9,6 @@ const DELTAS = [
 ];
 
 class Board {
-
   constructor(numStartingPieces) {
     this.score = 0;
     this.scoreboard = document.getElementById('score');
@@ -27,6 +26,9 @@ class Board {
 
     this.createBoard(numStartingPieces);
     this.nextPiece();
+
+    this.drawGridHighlights.bind(this);
+    this.drawWiggles.bind(this);
   }
 
   createBoard(numStartingPieces) {
@@ -77,30 +79,44 @@ class Board {
   nextPiece() {
     let randomVal = 10;
     const notEnemy = Math.random();
-    // % chance piece will be an enemy... will evenutally increase w level as well
     if (notEnemy < .93) {
       const i = this.level + 1;
-      randomVal = Math.ceil(Math.random() * i * Math.random())
+      randomVal = Math.ceil((Math.random() ** 2) * i)
     }
+    if (randomVal > 10) randomVal = 1;
     this.currentPieceVal = randomVal;
     const imageSrc = Square.getImage(this.currentPieceVal);
     this.pieceBoard.innerHTML = `<img src=\"${imageSrc}\">`
   }
 
   hoverPiece(coords) {
-    const square = this.getSquare(coords[0], coords[1]);
-    square.hoverPiece(this.currentPieceVal);
     this.clearWiggles();
-    const matches = this.getMatches(square, this.currentPieceVal);
-    if (matches.length >= 2 && !square.val) {
-      this.wiggleMatches(matches);
+    const square = this.getSquare(coords[0], coords[1]);
+    if (square.val === '') {
+      square.hoverPiece(this.currentPieceVal);
+      this.drawGridHighlights(coords);
+      this.drawWiggles(square);
     }
   }
 
-  wiggleMatches(matches) {
-    matches.forEach((match) => {
-      match.htmlElement.className = "square wiggle";
-    });
+  drawGridHighlights(coords) {
+    for (let i = 0; i < 6; i++) {
+      const x = coords[0];
+      const y = coords[1];
+      const hovRowSquare = this.getSquare(x, i);
+      hovRowSquare.hoveredRowColumn();
+      const hovColSquare = this.getSquare(i, y);
+      hovColSquare.hoveredRowColumn();
+    }
+  }
+
+  drawWiggles(square) {
+    const matches = this.getMatches(square, this.currentPieceVal);
+    if (matches.length >= 2 && !square.val) {
+      matches.concat(square).forEach((match) => {
+        match.htmlElement.className = "square wiggle";
+      });
+    }
   }
 
   makeMove(coords) {
