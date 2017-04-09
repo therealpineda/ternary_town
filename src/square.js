@@ -11,7 +11,7 @@ class Square {
     const square = this.htmlElement;
     square.className = 'square';
     if (this.val) {
-      square.style.backgroundImage = `url(\"../assets/img/icons/${this.val}.png\")`;
+      square.style.backgroundImage = `url(\"assets/img/icons/${this.val}.png\")`;
     } else {
       square.style.backgroundImage = '';
       square.classList.add(`hover-${hoverVal}`);
