@@ -447,7 +447,7 @@ var Board = function () {
         clickedSq.val = '';
       } else {
         clickedSq.val += 1;
-        this.badges.updateBadge(clickedSq.val);
+        if (clickedSq.val < 10 && clickedSq.val > 1) this.badges.updateBadge(clickedSq.val);
         matches.forEach(function (match) {
           match.val = '';
         });

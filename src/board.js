@@ -172,7 +172,7 @@ class Board {
       clickedSq.val = '';
     } else {
       clickedSq.val += 1;
-      this.badges.updateBadge(clickedSq.val);
+      if (clickedSq.val < 10 && clickedSq.val > 1) this.badges.updateBadge(clickedSq.val);
       matches.forEach((match) => {
         match.val = '';
       });
