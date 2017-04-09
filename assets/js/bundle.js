@@ -336,7 +336,7 @@ var Board = function () {
     value: function getRandomVal() {
       var randomVal = 10;
       var notEnemy = Math.random();
-      if (notEnemy < .93) {
+      if (notEnemy < .90) {
         var i = this.level + 1;
         randomVal = Math.ceil(Math.random() ** 2 * i);
       }

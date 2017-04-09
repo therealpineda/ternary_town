@@ -74,7 +74,7 @@ class Board {
   getRandomVal() {
     let randomVal = 10;
     const notEnemy = Math.random();
-    if (notEnemy < .93) {
+    if (notEnemy < .90) {
       const i = this.level + 1;
       randomVal = Math.ceil((Math.random() ** 2) * i)
     }
