@@ -73,11 +73,8 @@ tr:hover td {
   height: 75px;
   border: 1px solid rgba(154, 146, 122, 0.28);
   text-align: center;
-}
-
-.square > img {
-  width: 65px;
-  height: 65px;
+  background-size: 93% 93%;
+  background-position: center center;
 }
 
 .sidebar {
@@ -176,10 +173,48 @@ tr:hover td {
   color: #49799E;
 }
 
-.desk {
-  width: 120px;
-  height: 60px;
+/* BUILDING HOVER & DISPLAY */
+
+.hover-1:hover {
+  background-image: url("../img/icons/1.png");
 }
+
+.hover-2:hover {
+  background-image: url("../img/icons/2.png");
+}
+
+.hover-3:hover {
+  background-image: url("../img/icons/3.png");
+}
+
+.hover-4:hover {
+  background-image: url("../img/icons/4.png");
+}
+
+.hover-5:hover {
+  background-image: url("../img/icons/5.png");
+}
+
+.hover-6:hover {
+  background-image: url("../img/icons/6.png");
+}
+
+.hover-7:hover {
+  background-image: url("../img/icons/7.png");
+}
+
+.hover-8:hover {
+  background-image: url("../img/icons/8.png");
+}
+
+.hover-9:hover {
+  background-image: url("../img/icons/9.png");
+}
+
+.hover-10:hover {
+  background-image: url("../img/icons/10.png");
+}
+
 
 /* HEADER BACKGROUNG IMAGES */
 

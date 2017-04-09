@@ -4,17 +4,11 @@ class TernaryTown {
   constructor(numStartingPieces = 6) {
     this.htmlElement = document.getElementById('game-board');
     this.board = new Board(numStartingPieces);
-    this.startGameListeners();
+    this.startClickListener();
   }
 
-  startGameListeners() {
+  startClickListener() {
     const self = this;
-    this.htmlElement.addEventListener('mousemove', function(evt) {
-      self.board.drawSquares();
-      const coords = self.getCoords(evt);
-      self.board.hoverPiece(coords);
-    });
-
     this.htmlElement.addEventListener('click', function(evt) {
       const coords = self.getCoords(evt);
       self.board.makeMove(coords);
