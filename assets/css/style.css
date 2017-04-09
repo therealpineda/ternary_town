@@ -64,7 +64,7 @@ header h1 {
   border-collapse: collapse;
 }
 
-tr:hover td {
+#game-board tr:hover td {
   background-color: rgba(154, 146, 122, 0.18);
 }
 
@@ -120,6 +120,11 @@ tr:hover td {
   min-width: 20px;
 }
 
+.level-score-badges {
+  display: flex;
+  justify-content: space-between;
+}
+
 .level-piece-board {
   display: flex;
   flex-direction: column;
@@ -137,6 +142,26 @@ tr:hover td {
   height: 60px;
   margin: 10px 0;
   border: 1px solid rgba(0, 0, 0, 0.28);
+}
+
+.badges-section {
+  margin-top: 23px;
+  border-left: 1px solid rgba(0, 0, 0, 0.28);
+  padding-left: 5px;
+}
+
+#badges {
+}
+
+.badge {
+  width: 48px;
+  align-items: center;
+  justify-content: center;
+  transition: 0.5s ease-in all;
+}
+
+.locked {
+  filter: grayscale(1) opacity(.13);
 }
 
 .rules {

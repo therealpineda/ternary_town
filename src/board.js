@@ -1,5 +1,6 @@
 import Square from './square';
 import Audio from './audio';
+import Badges from './badges';
 
 const DELTAS = [
   [0, -1],
@@ -23,6 +24,7 @@ class Board {
     this.currentPieceVal = '';
 
     this.audio = new Audio();
+    this.badges = new Badges();
 
     this.nextPiece();
     this.createBoard(numStartingPieces);
@@ -170,6 +172,7 @@ class Board {
       clickedSq.val = '';
     } else {
       clickedSq.val += 1;
+      this.badges.updateBadge(clickedSq.val);
       matches.forEach((match) => {
         match.val = '';
       });

@@ -250,6 +250,10 @@ var _audio = __webpack_require__(1);
 
 var _audio2 = _interopRequireDefault(_audio);
 
+var _badges = __webpack_require__(5);
+
+var _badges2 = _interopRequireDefault(_badges);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -273,6 +277,7 @@ var Board = function () {
     this.currentPieceVal = '';
 
     this.audio = new _audio2.default();
+    this.badges = new _badges2.default();
 
     this.nextPiece();
     this.createBoard(numStartingPieces);
@@ -442,6 +447,7 @@ var Board = function () {
         clickedSq.val = '';
       } else {
         clickedSq.val += 1;
+        this.badges.updateBadge(clickedSq.val);
         matches.forEach(function (match) {
           match.val = '';
         });
@@ -555,7 +561,6 @@ var Square = function () {
     this.col = col;
     this.sqNumber = row * 6 + col;
     this.val = '';
-    this.age = new Date();
   }
 
   _createClass(Square, [{
@@ -565,7 +570,6 @@ var Square = function () {
       square.className = 'square';
       if (this.val) {
         square.style.backgroundImage = 'url("../assets/img/icons/' + this.val + '.png")';
-        console.log(this.row, this.col, square.style.backgroundImage);
       } else {
         square.style.backgroundImage = '';
         square.classList.add('hover-' + hoverVal);
@@ -594,6 +598,45 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 document.addEventListener('DOMContentLoaded', function () {
   new _game2.default();
 });
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Badges = function () {
+  function Badges() {
+    _classCallCheck(this, Badges);
+
+    this.progress = new Array(9).fill(false);
+    this.updateBadge(1);
+  }
+
+  _createClass(Badges, [{
+    key: 'updateBadge',
+    value: function updateBadge(val) {
+      if (!this.progress[val - 1]) {
+        this.progress[val - 1] = true;
+        var badge = document.getElementById('b-' + val);
+        badge.classList.remove('locked');
+      }
+    }
+  }]);
+
+  return Badges;
+}();
+
+exports.default = Badges;
 
 /***/ })
 /******/ ]);
