@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -79,7 +79,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _board = __webpack_require__(2);
+var _board = __webpack_require__(3);
 
 var _board2 = _interopRequireDefault(_board);
 
@@ -242,7 +242,46 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _square = __webpack_require__(3);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Badges = function () {
+  function Badges() {
+    _classCallCheck(this, Badges);
+
+    this.progress = new Array(9).fill(false);
+    this.updateBadge(1);
+  }
+
+  _createClass(Badges, [{
+    key: 'updateBadge',
+    value: function updateBadge(val) {
+      if (!this.progress[val - 1]) {
+        this.progress[val - 1] = true;
+        var badge = document.getElementById('b-' + val);
+        badge.classList.remove('locked');
+      }
+    }
+  }]);
+
+  return Badges;
+}();
+
+exports.default = Badges;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _square = __webpack_require__(4);
 
 var _square2 = _interopRequireDefault(_square);
 
@@ -250,7 +289,7 @@ var _audio = __webpack_require__(1);
 
 var _audio2 = _interopRequireDefault(_audio);
 
-var _badges = __webpack_require__(5);
+var _badges = __webpack_require__(2);
 
 var _badges2 = _interopRequireDefault(_badges);
 
@@ -329,7 +368,7 @@ var Board = function () {
     value: function nextPiece() {
       var randomVal = this.getRandomVal();
       this.currentPieceVal = randomVal;
-      this.pieceBoard.innerHTML = '<img src="../assets/img/icons/' + randomVal + '.png">';
+      this.pieceBoard.innerHTML = '<img src="assets/img/icons/' + randomVal + '.png">';
     }
   }, {
     key: 'getRandomVal',
@@ -538,7 +577,7 @@ var Board = function () {
 exports.default = Board;
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -569,7 +608,7 @@ var Square = function () {
       var square = this.htmlElement;
       square.className = 'square';
       if (this.val) {
-        square.style.backgroundImage = 'url("../assets/img/icons/' + this.val + '.png")';
+        square.style.backgroundImage = 'url("assets/img/icons/' + this.val + '.png")';
       } else {
         square.style.backgroundImage = '';
         square.classList.add('hover-' + hoverVal);
@@ -583,7 +622,7 @@ var Square = function () {
 exports.default = Square;
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -598,45 +637,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 document.addEventListener('DOMContentLoaded', function () {
   new _game2.default();
 });
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Badges = function () {
-  function Badges() {
-    _classCallCheck(this, Badges);
-
-    this.progress = new Array(9).fill(false);
-    this.updateBadge(1);
-  }
-
-  _createClass(Badges, [{
-    key: 'updateBadge',
-    value: function updateBadge(val) {
-      if (!this.progress[val - 1]) {
-        this.progress[val - 1] = true;
-        var badge = document.getElementById('b-' + val);
-        badge.classList.remove('locked');
-      }
-    }
-  }]);
-
-  return Badges;
-}();
-
-exports.default = Badges;
 
 /***/ })
 /******/ ]);

@@ -68,7 +68,7 @@ class Board {
   nextPiece() {
     const randomVal = this.getRandomVal();
     this.currentPieceVal = randomVal;
-    this.pieceBoard.innerHTML = `<img src=\"../assets/img/icons/${randomVal}.png\">`
+    this.pieceBoard.innerHTML = `<img src=\"assets/img/icons/${randomVal}.png\">`
   }
 
   getRandomVal() {
