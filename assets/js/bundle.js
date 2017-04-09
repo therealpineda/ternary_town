@@ -95,19 +95,13 @@ var TernaryTown = function () {
 
     this.htmlElement = document.getElementById('game-board');
     this.board = new _board2.default(numStartingPieces);
-    this.startGameListeners();
+    this.startClickListener();
   }
 
   _createClass(TernaryTown, [{
-    key: 'startGameListeners',
-    value: function startGameListeners() {
+    key: 'startClickListener',
+    value: function startClickListener() {
       var self = this;
-      this.htmlElement.addEventListener('mousemove', function (evt) {
-        self.board.drawSquares();
-        var coords = self.getCoords(evt);
-        self.board.hoverPiece(coords);
-      });
-
       this.htmlElement.addEventListener('click', function (evt) {
         var coords = self.getCoords(evt);
         self.board.makeMove(coords);
@@ -256,6 +250,10 @@ var _audio = __webpack_require__(1);
 
 var _audio2 = _interopRequireDefault(_audio);
 
+var _badges = __webpack_require__(5);
+
+var _badges2 = _interopRequireDefault(_badges);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -279,12 +277,10 @@ var Board = function () {
     this.currentPieceVal = '';
 
     this.audio = new _audio2.default();
+    this.badges = new _badges2.default();
 
-    this.createBoard(numStartingPieces);
     this.nextPiece();
-
-    this.drawGridHighlights.bind(this);
-    this.drawWiggles.bind(this);
+    this.createBoard(numStartingPieces);
   }
 
   _createClass(Board, [{
@@ -304,18 +300,11 @@ var Board = function () {
   }, {
     key: 'drawSquares',
     value: function drawSquares() {
+      var _this = this;
+
       this.grid.forEach(function (row) {
         row.forEach(function (sq) {
-          sq.drawSquare();
-        });
-      });
-    }
-  }, {
-    key: 'clearWiggles',
-    value: function clearWiggles() {
-      this.grid.forEach(function (row) {
-        row.forEach(function (sq) {
-          sq.htmlElement.className = "square";
+          sq.drawPiece(_this.currentPieceVal);
         });
       });
     }
@@ -332,57 +321,26 @@ var Board = function () {
         var y = Math.floor(Math.random() * 6);
         var val = Math.floor(Math.random() * i) + 1;
         var square = this.getSquare(x, y);
-        if (!square.val) {
-          square.val = val;
-        }
+        if (!square.val) square.val = val;
       }
     }
   }, {
     key: 'nextPiece',
     value: function nextPiece() {
+      var randomVal = this.getRandomVal();
+      this.currentPieceVal = randomVal;
+      this.pieceBoard.innerHTML = '<img src="../assets/img/icons/' + randomVal + '.png">';
+    }
+  }, {
+    key: 'getRandomVal',
+    value: function getRandomVal() {
       var randomVal = 10;
       var notEnemy = Math.random();
       if (notEnemy < .93) {
         var i = this.level + 1;
         randomVal = Math.ceil(Math.random() ** 2 * i);
       }
-      if (randomVal > 10) randomVal = 1;
-      this.currentPieceVal = randomVal;
-      var imageSrc = _square2.default.getImage(this.currentPieceVal);
-      this.pieceBoard.innerHTML = '<img src="' + imageSrc + '">';
-    }
-  }, {
-    key: 'hoverPiece',
-    value: function hoverPiece(coords) {
-      this.clearWiggles();
-      var square = this.getSquare(coords[0], coords[1]);
-      if (square.val === '') {
-        square.hoverPiece(this.currentPieceVal);
-        this.drawGridHighlights(coords);
-        this.drawWiggles(square);
-      }
-    }
-  }, {
-    key: 'drawGridHighlights',
-    value: function drawGridHighlights(coords) {
-      for (var i = 0; i < 6; i++) {
-        var x = coords[0];
-        var y = coords[1];
-        var hovRowSquare = this.getSquare(x, i);
-        hovRowSquare.hoveredRowColumn();
-        var hovColSquare = this.getSquare(i, y);
-        hovColSquare.hoveredRowColumn();
-      }
-    }
-  }, {
-    key: 'drawWiggles',
-    value: function drawWiggles(square) {
-      var matches = this.getMatches(square, this.currentPieceVal);
-      if (matches.length >= 2 && !square.val) {
-        matches.concat(square).forEach(function (match) {
-          match.htmlElement.className = "square wiggle";
-        });
-      }
+      return randomVal > 10 ? 1 : randomVal;
     }
   }, {
     key: 'makeMove',
@@ -401,7 +359,6 @@ var Board = function () {
         }
         this.nextPiece();
       }
-      this.clearWiggles();
       this.drawSquares();
     }
   }, {
@@ -416,14 +373,14 @@ var Board = function () {
   }, {
     key: 'getNeighbors',
     value: function getNeighbors(square) {
-      var _this = this;
+      var _this2 = this;
 
       var neighbors = [];
       DELTAS.forEach(function (d) {
         var x = square.col + d[0];
         var y = square.row + d[1];
         if (x >= 0 && x <= 5 && y >= 0 && y <= 5) {
-          var neighSq = _this.getSquare(x, y);
+          var neighSq = _this2.getSquare(x, y);
           neighbors.push(neighSq);
         }
       });
@@ -432,7 +389,7 @@ var Board = function () {
   }, {
     key: 'getMatches',
     value: function getMatches(targetSq, matchVal) {
-      var _this2 = this;
+      var _this3 = this;
 
       if (!matchVal) {
         matchVal = targetSq.val;
@@ -442,7 +399,7 @@ var Board = function () {
       });
 
       matches.forEach(function (match) {
-        _this2.getNeighbors(match).forEach(function (neigh) {
+        _this3.getNeighbors(match).forEach(function (neigh) {
           if (!matches.includes(neigh) && neigh.sqNumber !== targetSq.sqNumber) {
             if (neigh.val === matchVal) {
               matches.push(neigh);
@@ -472,13 +429,13 @@ var Board = function () {
   }, {
     key: 'updateScore',
     value: function updateScore(num) {
-      var _this3 = this;
+      var _this4 = this;
 
       this.score += num;
       this.level = Math.floor(this.score / 10000) + 1;
       window.setTimeout(function () {
-        _this3.addedScore.innerHTML = '&nbsp;';
-        _this3.scoreboard.innerHTML = _this3.score;
+        _this4.addedScore.innerHTML = '&nbsp;';
+        _this4.scoreboard.innerHTML = _this4.score;
       }, 1100);
       this.addedScore.innerHTML = '+ ' + num + '!';
       this.levelBoard.innerHTML = this.level;
@@ -490,6 +447,7 @@ var Board = function () {
         clickedSq.val = '';
       } else {
         clickedSq.val += 1;
+        if (clickedSq.val < 10 && clickedSq.val > 1) this.badges.updateBadge(clickedSq.val);
         matches.forEach(function (match) {
           match.val = '';
         });
@@ -503,20 +461,20 @@ var Board = function () {
   }, {
     key: 'moveCarts',
     value: function moveCarts() {
-      var _this4 = this;
+      var _this5 = this;
 
       var self = this;
       var newCarts = [];
       this.carts.forEach(function (cart) {
-        var posMoves = _this4.posCartMoves(cart);
+        var posMoves = _this5.posCartMoves(cart);
         if (posMoves.length > 0) {
           var destinationSq = posMoves[Math.floor(Math.random() * posMoves.length)];
           destinationSq.val = cart.val;
           cart.val = "";
           newCarts.push(destinationSq);
         } else {
-          if (_this4.checkTrapped(cart, cart.col, cart.row)) {
-            _this4.makeFlower(cart);
+          if (_this5.checkTrapped(cart, cart.col, cart.row)) {
+            _this5.makeFlower(cart);
           } else {
             newCarts.push(cart);
           }
@@ -603,67 +561,18 @@ var Square = function () {
     this.col = col;
     this.sqNumber = row * 6 + col;
     this.val = '';
-    this.age = new Date();
   }
 
   _createClass(Square, [{
-    key: 'drawSquare',
-    value: function drawSquare(val) {
+    key: 'drawPiece',
+    value: function drawPiece(hoverVal) {
       var square = this.htmlElement;
-      if (!val) {
-        val = this.val;
-      }
-      var img = new Image();
-      img.src = Square.getImage(val);
-      square.innerHTML = '';
-      square.style.backgroundColor = "transparent";
-      square.className = "square";
-      square.appendChild(img);
-    }
-  }, {
-    key: 'hoverPiece',
-    value: function hoverPiece(currentPieceVal) {
-      if (!this.val) {
-        this.drawSquare(currentPieceVal);
-        this.htmlElement.addEventListener('mouseleave', this.drawSquare.bind(this));
-      }
-    }
-  }, {
-    key: 'hoveredRowColumn',
-    value: function hoveredRowColumn() {
-      this.htmlElement.style.backgroundColor = "rgba(154, 146, 122, 0.09)";
-      this.htmlElement.addEventListener('mouseleave', this.drawSquare.bind(this));
-    }
-  }], [{
-    key: 'getImage',
-    value: function getImage(pieceVal) {
-      switch (pieceVal) {
-        case 1:
-          return 'assets/img/icons/1.png';
-        case 2:
-          return 'assets/img/icons/2.png';
-        case 3:
-          return 'assets/img/icons/3.png';
-        case 4:
-          return 'assets/img/icons/4.png';
-        case 5:
-          return 'assets/img/icons/5.png';
-        case 6:
-          return 'assets/img/icons/6.png';
-        case 7:
-          return 'assets/img/icons/7.png';
-        case 8:
-          return 'assets/img/icons/8.png';
-        case 9:
-          return 'assets/img/icons/9.png';
-        case 10:
-          return 'assets/img/icons/e1.png';
-        case 11:
-          return 'assets/img/icons/e2.png';
-        case 12:
-          return 'assets/img/icons/e3.png';
-        default:
-          return 'assets/img/icons/blank.png';
+      square.className = 'square';
+      if (this.val) {
+        square.style.backgroundImage = 'url("../assets/img/icons/' + this.val + '.png")';
+      } else {
+        square.style.backgroundImage = '';
+        square.classList.add('hover-' + hoverVal);
       }
     }
   }]);
@@ -689,6 +598,45 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 document.addEventListener('DOMContentLoaded', function () {
   new _game2.default();
 });
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Badges = function () {
+  function Badges() {
+    _classCallCheck(this, Badges);
+
+    this.progress = new Array(9).fill(false);
+    this.updateBadge(1);
+  }
+
+  _createClass(Badges, [{
+    key: 'updateBadge',
+    value: function updateBadge(val) {
+      if (!this.progress[val - 1]) {
+        this.progress[val - 1] = true;
+        var badge = document.getElementById('b-' + val);
+        badge.classList.remove('locked');
+      }
+    }
+  }]);
+
+  return Badges;
+}();
+
+exports.default = Badges;
 
 /***/ })
 /******/ ]);

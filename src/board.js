@@ -1,5 +1,6 @@
 import Square from './square';
 import Audio from './audio';
+import Badges from './badges';
 
 const DELTAS = [
   [0, -1],
@@ -23,12 +24,10 @@ class Board {
     this.currentPieceVal = '';
 
     this.audio = new Audio();
+    this.badges = new Badges();
 
-    this.createBoard(numStartingPieces);
     this.nextPiece();
-
-    this.drawGridHighlights.bind(this);
-    this.drawWiggles.bind(this);
+    this.createBoard(numStartingPieces);
   }
 
   createBoard(numStartingPieces) {
@@ -47,16 +46,8 @@ class Board {
   drawSquares() {
     this.grid.forEach((row) => {
       row.forEach((sq) => {
-        sq.drawSquare();
+        sq.drawPiece(this.currentPieceVal);
       })
-    });
-  }
-
-  clearWiggles() {
-    this.grid.forEach((row) => {
-      row.forEach((sq) => {
-        sq.htmlElement.className = "square";
-      });
     });
   }
 
@@ -70,53 +61,24 @@ class Board {
       const y = Math.floor(Math.random() * 6);
       const val = (Math.floor(Math.random() * i)) + 1;
       const square = this.getSquare(x,y);
-      if (!square.val) {
-        square.val = val;
-      }
+      if (!square.val) square.val = val;
     }
   }
 
   nextPiece() {
+    const randomVal = this.getRandomVal();
+    this.currentPieceVal = randomVal;
+    this.pieceBoard.innerHTML = `<img src=\"../assets/img/icons/${randomVal}.png\">`
+  }
+
+  getRandomVal() {
     let randomVal = 10;
     const notEnemy = Math.random();
     if (notEnemy < .93) {
       const i = this.level + 1;
       randomVal = Math.ceil((Math.random() ** 2) * i)
     }
-    if (randomVal > 10) randomVal = 1;
-    this.currentPieceVal = randomVal;
-    const imageSrc = Square.getImage(this.currentPieceVal);
-    this.pieceBoard.innerHTML = `<img src=\"${imageSrc}\">`
-  }
-
-  hoverPiece(coords) {
-    this.clearWiggles();
-    const square = this.getSquare(coords[0], coords[1]);
-    if (square.val === '') {
-      square.hoverPiece(this.currentPieceVal);
-      this.drawGridHighlights(coords);
-      this.drawWiggles(square);
-    }
-  }
-
-  drawGridHighlights(coords) {
-    for (let i = 0; i < 6; i++) {
-      const x = coords[0];
-      const y = coords[1];
-      const hovRowSquare = this.getSquare(x, i);
-      hovRowSquare.hoveredRowColumn();
-      const hovColSquare = this.getSquare(i, y);
-      hovColSquare.hoveredRowColumn();
-    }
-  }
-
-  drawWiggles(square) {
-    const matches = this.getMatches(square, this.currentPieceVal);
-    if (matches.length >= 2 && !square.val) {
-      matches.concat(square).forEach((match) => {
-        match.htmlElement.className = "square wiggle";
-      });
-    }
+    return randomVal > 10 ? 1 : randomVal;
   }
 
   makeMove(coords) {
@@ -134,7 +96,6 @@ class Board {
       }
       this.nextPiece();
     }
-    this.clearWiggles();
     this.drawSquares();
   }
 
@@ -211,6 +172,7 @@ class Board {
       clickedSq.val = '';
     } else {
       clickedSq.val += 1;
+      if (clickedSq.val < 10 && clickedSq.val > 1) this.badges.updateBadge(clickedSq.val);
       matches.forEach((match) => {
         match.val = '';
       });
@@ -246,7 +208,7 @@ class Board {
   posCartMoves(cart) {
     return this.getNeighbors(cart).filter((neigh) => {
       return !neigh.val;
-    })
+    });
   }
 
   checkTrapped(cart) {
@@ -285,7 +247,6 @@ class Board {
     });
     return full;
   }
-
 }
 
 export default Board;
